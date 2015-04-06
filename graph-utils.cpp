@@ -15,8 +15,8 @@ int main(int argc, char* argv[])
 	}
 
 	// path para ambos os parametros
-	char* input;
-	char* output;
+	char* input = nullptr;
+	char* output = nullptr;
 
 	// parser dos parametros
 	for (int i=1; i<argc; i++) {
