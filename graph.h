@@ -157,6 +157,8 @@ class Graph
 
                 i = i->getNextInGraph();
             }
+            
+            return count;
         }
 
         // demais funcionalidades:
