@@ -13,39 +13,39 @@ class Node
             this->degree = degree;
             nextInGraph = nextInEdges = NULL;
         }
-
+        //recupera o valor do nó
         int getValue() {
             return value;
         }
-
+        //altera o valor do nó
         void setValue(int value) {
             this->value = value;
         }
-
+        //recupera o grau do nó
         int getDegree() {
             return degree;
         }
-
+        //altera o grau do nó
         void setDegree(int degree) {
             this->degree = degree;
         }
-
+        //retorna o próximo nó no grafo
         Node* getNextInGraph() {
             return nextInGraph;
         }
-
+        //altera o proximo nó no grafo
         void setNextInGraph(Node* n) {
             this->nextInGraph = n;
         }
-
+         //retorna o proximo no adjacente
         Node* getNextInEdges() {
             return nextInEdges;
         }
-
+        //altera o proximo nó adjacente
         void setNextInEdges(Node* n) {
             this->nextInEdges = n;
         }
-
+        //insere aresta
         void insertEdge(Node* n) {
             Node* i = this;
             while (true) {
