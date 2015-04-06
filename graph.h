@@ -1,3 +1,5 @@
+#include <cstddef>
+
 class Node
 {
     private:
@@ -36,7 +38,7 @@ class Node
         }
 
         bool hasEdgeWith(Node* node) { // ?
-            i = this;
+            Node* i = this;
             while(i->getNext() != NULL) {
                 if (i == node) {
                     return true;
@@ -56,7 +58,7 @@ class Graph
         int num_nodes, num_edges;
     public:
         Graph() {
-            root = new No(NULL);
+            root = new Node(0, 0);
             num_nodes = num_edges = 0;
         }
 

@@ -1,11 +1,23 @@
+#include <iostream>
+#include <string.h>
 #include "graph.h"
 
 class Manager {
 	// classe responsável pela leitura/escrita de arquivos e montagem do grafo
 
-	void exportGraph(Graph* graph, File* file);
+	public:
+		void exportGraph(Graph* graph, FILE* file);
 
-	Graph* createGraphFromFile(File* file);
+		Graph* createGraphFromFILE(FILE* file);
 
-	File* readFile(char* path);
-}
+		FILE* readFile(char* path) {
+		    FILE* file;
+		    file = fopen(path, "r");
+
+		    if (file == NULL) {
+		    	throw "Error opening file.";
+		    }
+
+		    return file;
+		}
+};
