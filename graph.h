@@ -82,8 +82,6 @@ class Graph
 
         int getNumNodesByDegree(int degree);
 
-        void exportGraph(File* file);
-
         // demais funcionalidades:
 
         // void insertNode();
@@ -103,6 +101,7 @@ class Graph
         bool areAdjacent(Node* source, Node* dest) {
             return source->hasEdgeWith(dest);
         }
+
         bool isConnected();
 
         bool nodesInSameComponent(Node* n1, Node* n2); // class Component? ou apenas outra instancia de Graph?
