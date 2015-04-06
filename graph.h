@@ -2,14 +2,12 @@ class Node
 {
     private:
         int value, degree;
-        double weight;
         Node *next;
 
     public:
-        Node(int value, int degree, double weight) {
+        Node(int value, int degree) {
             this->value = value;
             this->degree = degree;
-            this->weight = weight;
             next = NULL;
         }
 
@@ -29,14 +27,6 @@ class Node
             this->degree = degree;
         }
 
-        double getWeight() {
-            return weight;
-        }
-
-        void setWeight(double weight) {
-            this->weight = weight;
-        }
-
         Node* getNext() {
             return next;
         }
@@ -45,7 +35,7 @@ class Node
             this->next = next;
         }
 
-        bool hasEdge(Node* node) { // ?
+        bool hasEdgeWith(Node* node) { // ?
             i = this;
             while(i->getNext() != NULL) {
                 if (i == node) {
@@ -67,7 +57,7 @@ class Graph
     public:
         Graph() {
             root = new No(NULL);
-            num_nodes = 0;
+            num_nodes = num_edges = 0;
         }
 
         Node* getRoot() {
@@ -98,7 +88,8 @@ class Graph
 
         // void insertNode();
         // void removeNode();
-        void insertEdge(Node* root, Node* source, Node* dest, double weight); // ao final, source.degree++ && dest.degree++
+        void insertEdge(Node* root, Node* source, Node* dest); // ao final, source.degree++ && dest.degree++
+
         void removeEdge(Node* source, Node* dest);
 
         int getDegree(Node* node) {
@@ -106,14 +97,19 @@ class Graph
         }
 
         bool isRegular(int degree);
+
         bool isComplete();
+
         bool areAdjacent(Node* source, Node* dest) {
-            return source->hasEdge(dest);
+            return source->hasEdgeWith(dest);
         }
         bool isConnected();
-        bool nodesInSameComponent(Node* n1, Node* n2); // class Component: será que vale a pena?
+
+        bool nodesInSameComponent(Node* n1, Node* n2); // class Component? ou apenas outra instancia de Graph?
+
         bool isArticulationPoint(Node* n);
-        bool isBridge(Node* n1, Node* n2); // class Edge?
+
+        bool isBridge(Node* n1, Node* n2);
 
         // + 10  - Obtenha os componentes conexos do grafo. Quantos componentes conexos tem o grafo? Qual ́e o tamanho do maior e do menor componente conexo?
 };
