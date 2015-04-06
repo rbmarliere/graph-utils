@@ -8,14 +8,15 @@ class Manager {
 	public:
 		void exportGraph(Graph* graph, FILE* file);
 
-		Graph* createGraphFromFILE(FILE* file);
+		Graph* createGraphFromFile(FILE* file);
 
 		FILE* readFile(char* path) {
 		    FILE* file;
 		    file = fopen(path, "r");
 
 		    if (file == NULL) {
-		    	throw "Error opening file.";
+		    	std::string errMsg("Error opening file \"");
+		    	throw errMsg + path + "\"";
 		    }
 
 		    return file;

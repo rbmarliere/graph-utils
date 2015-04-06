@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 
 		// fclose(inputFile);
 		// fclose(outputFile);
-	} catch (const char* msg) {
+	} catch (std::string msg) {
 		cout << "Error: " << msg;
 	}
 }
