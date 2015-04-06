@@ -107,8 +107,16 @@ class Graph
 
         // escrever um grafo em um arquivo texto com as seguintes informações do grafo: número de vértices, número de arestas, grau médio, e distribuição empírica do grau dos vértices, que consiste na frequência relativa dos graus. Ou seja, f(d) = n(d)/n, onde f(d) é a frequência relativa do grau d que é dada pelo número de vértices com grau d (dado por n(d)) divido pelo número total de vértices do grafo (dado por n) :
 
+        void setNumNodes(int num) {
+            this->num_nodes = num;
+        }
+
         int getNumNodes() {
             return num_nodes;
+        }
+
+        void setNumEdges(int num) {
+            this->num_edges = num;
         }
 
         int getNumEdges() {

@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
 	Manager manager;
 
-	// checa se usuario inseriu quantidade certa de parametros
+	// verifica se usuario inseriu quantidade certa de parametros
 	if (argc != 5) {
 		cout << "usage: graph-utils -i <input file> -o <output file>\n";
 		return 0;
@@ -30,13 +30,9 @@ int main(int argc, char* argv[])
 	}
 
 	try {
-		FILE* inputFile = manager.openFile(input);
-		// Graph* inputGraph = manager.createGraphFromFile(inputFile);
+		Graph* graph = manager.createGraph(input);
 
-		// Manager::write output
-
-		// fclose(inputFile);
-		// fclose(outputFile);
+		// manager.exportGraph(graph, output);
 	} catch (std::string msg) {
 		cout << "Error: " << msg;
 	}
