@@ -4,7 +4,8 @@ class Node
 {
     private:
         int value, degree;
-        Node *next;
+        Node* nextInGraph;
+        Node* nextInEdges;
 
     public:
         Node(int value, int degree) {
@@ -29,22 +30,60 @@ class Node
             this->degree = degree;
         }
 
-        Node* getNext() {
-            return next;
+        Node* getNextInGraph() {
+            return nextInGraph;
         }
 
-        void setNext(Node *next) {
-            this->next = next;
+        void setNextInGraph(Node* n) {
+            this->nextInGraph = n;
         }
 
-        bool hasEdgeWith(Node* node) { // ?
+        Node* getNextInEdges() {
+            return nextInEdges;
+        }
+
+        void setNextInEdges(Node* n) {
+            this->nextInEdges = n;
+        }
+
+        void insertEdge(Node* n) {
             Node* i = this;
-            while(i->getNext() != NULL) {
+            while (true) {
+                if (i == n) {
+                    break;
+                }
+
+                if (i->getNextInEdges() == NULL) {
+                    i->setNextInEdges(n);
+                    break;
+                }
+            }
+        }
+
+        void removeEdge(Node* n) {
+            Node* i = this;
+            while (true) {
+                if (i->getNextInEdges() == NULL) {
+                    break;
+                }
+
+                if (i->getNextInEdges() == n) {
+                    i->setNextInEdges(n->getNextInEdges());
+                    break;
+                }
+
+                i = i->getNextInEdges();
+            }
+        }
+
+        bool hasEdgeWith(Node* node) {
+            Node* i = this;
+            while(i->getNextInEdges() != NULL) {
                 if (i == node) {
                     return true;
                 }
 
-                i = i->getNext();
+                i = i->getNextInEdges();
             }
 
             return false;
@@ -54,7 +93,7 @@ class Node
 class Graph
 {
     private:
-        Node *root;
+        Node* root;
         int num_nodes, num_edges;
     public:
         Graph() {
@@ -80,17 +119,87 @@ class Graph
             return getNumNodesByDegree(degree) / num_nodes;
         }
 
-        double getDegreeAverage();
+        double getDegreeAverage() {
+            Node* i = root;
+            int sumDegrees = 0;
+            while (true) {
+                sumDegrees += i->getDegree();
 
-        int getNumNodesByDegree(int degree);
+                if (i->getNextInGraph() == NULL) {
+                    break;
+                }
+
+                i = i->getNextInGraph();
+            }
+
+            return sumDegrees / num_nodes;
+        }
+
+        int getNumNodesByDegree(int degree) {
+            Node* i = root;
+            int count = 0;
+            while (true) {
+                if (i->getNextInGraph() == NULL) {
+                    break;
+                }
+
+                if (i->getDegree() == degree) {
+                    count++;
+                }
+
+                i = i->getNextInGraph();
+            }
+        }
 
         // demais funcionalidades:
 
-        // void insertNode();
-        // void removeNode();
-        void insertEdge(Node* root, Node* source, Node* dest); // ao final, source.degree++ && dest.degree++
+        void insertNode(Node* n) {
+            Node* i = root;
+            while (true) {
+                if (i == n) {
+                    break;
+                }
 
-        void removeEdge(Node* source, Node* dest);
+                if (i->getNextInGraph() == NULL) {
+                    i->setNextInGraph(n);
+                    break;
+                }
+
+                i = i->getNextInGraph();
+            }
+        }
+
+        void removeNode(Node* n) {
+            Node* i = root;
+            while (true) {
+                if (i->getNextInGraph() == NULL) {
+                    break;
+                }
+
+                if (i->getNextInGraph() == n) {
+                    i->setNextInGraph(n->getNextInGraph());
+                    break;
+                }
+
+                i = i->getNextInGraph();
+            }
+        }
+
+        void insertEdge(Node* source, Node* dest) {
+            source->insertEdge(dest);
+            dest->insertEdge(source);
+
+            source->setDegree(source->getDegree()+1);
+            dest->setDegree(dest->getDegree()+1);
+        }
+
+        void removeEdge(Node* source, Node* dest) {
+            source->removeEdge(dest);
+            dest->removeEdge(source);
+
+            source->setDegree(source->getDegree()-1);
+            dest->setDegree(dest->getDegree()-1);
+        }
 
         int getDegree(Node* node) {
             return node->getDegree();

@@ -40,4 +40,6 @@ int main(int argc, char* argv[])
 	} catch (std::string msg) {
 		cout << "Error: " << msg;
 	}
+
+	return 1;
 }
