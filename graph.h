@@ -11,7 +11,7 @@ class Node
         Node(int value, int degree) {
             this->value = value;
             this->degree = degree;
-            next = NULL;
+            nextInGraph = nextInEdges = NULL;
         }
 
         int getValue() {
