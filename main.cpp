@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	}
 
 	try {
-		FILE* inputFile = manager.readFile(input);
+		FILE* inputFile = manager.openFile(input);
 		// Graph* inputGraph = manager.createGraphFromFile(inputFile);
 
 		// Manager::write output

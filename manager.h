@@ -10,7 +10,7 @@ class Manager {
 
 		Graph* createGraphFromFile(FILE* file);
 
-		FILE* readFile(char* path) {
+		FILE* openFile(char* path) {
 		    FILE* file;
 		    file = fopen(path, "r");
 
