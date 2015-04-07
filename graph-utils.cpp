@@ -33,6 +33,8 @@ int main(int argc, char* argv[])
 		Graph* graph = manager.createGraph(input);
 
 		manager.exportGraph(graph, output);
+
+		cout << "dumped to " << output << "\n";
 	} catch (std::string msg) {
 		cout << "Error: " << msg;
 	}

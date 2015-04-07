@@ -1,4 +1,30 @@
 #include <cstddef>
+#include <iostream>
+
+class Node;
+class Edge
+{
+    private:
+        Node* node;
+        Edge* next;
+    public:
+        Edge(Node* n) {
+            node = n;
+            next = nullptr;
+        }
+
+        void setNext(Edge* e) {
+            this->next = e;
+        }
+
+        Edge* getNext() {
+            return this->next;
+        }
+
+        Node* getNode() {
+            return this->node;
+        }
+};
 
 class Node
 {
@@ -11,7 +37,8 @@ class Node
         Node(int value, int degree) {
             this->value = value;
             this->degree = degree;
-            nextInGraph = edges = nullptr;
+            nextInGraph = nullptr;
+            edges = nullptr;
         }
         //recupera o valor do nó
         int getValue() {
@@ -37,86 +64,68 @@ class Node
         void setNextInGraph(Node* n) {
             this->nextInGraph = n;
         }
-         //retorna o proximo no adjacente
-        // Node* getNextInEdges() {
-        //     return nextInEdges;
-        // }
+
         Edge* getEdges() {
             return this->edges;
         }
-        //altera o proximo nó adjacente
-        void setNextInEdges(Node* n) {
-            this->nextInEdges = n;
+
+        void setEdgeRoot(Node* n) {
+            Edge* e = new Edge(n);
+            this->edges = e;
         }
-        //insere aresta
+
         void insertEdge(Node* n) {
-            this->getEdges()->addEdge(n);
+            if (edges == nullptr) {
+                this->setEdgeRoot(n);
+            } else {
+                Edge* i = getEdges();
+                while (true) {
+                    if (i->getNode()->getValue() == n->getValue()) {
+                        break;
+                    }
+
+                    if (i->getNext() == nullptr) {
+                        Edge* e = new Edge(n);
+                        i->setNext(e);
+                        break;
+                    }
+
+                    i = i->getNext();
+                }
+            }
         }
 
         void removeEdge(Node* n) {
-            Node* i = this;
-            while (true) {
-                if (i->getNextInEdges() == nullptr) {
-                    break;
-                }
+            // Node* i = this;
+            // while (true) {
+            //     if (i->getNextInEdges() == nullptr) {
+            //         break;
+            //     }
 
-                if (i->getNextInEdges() == n) {
-                    i->setNextInEdges(n->getNextInEdges());
-                    break;
-                }
+            //     if (i->getNextInEdges() == n) {
+            //         i->setNextInEdges(n->getNextInEdges());
+            //         break;
+            //     }
 
-                i = i->getNextInEdges();
-            }
+            //     i = i->getNextInEdges();
+            // }
         }
 
         bool hasEdgeWith(Node* n) {
-            Node* i = this;
-            while(i->getNextInEdges() != nullptr) {
-                if (i->getValue() == n->getValue()) {
-                    return true;
+            Edge* i = getEdges();
+            while(true) {
+                if (i == nullptr) {
+                    break;
                 }
 
-                i = i->getNextInEdges();
-            }
-
-            return false;
-        }
-};
-
-class Edge
-{
-    private:
-        Node* node;
-        Edge* next;
-    public:
-        Edge(Node* n) {
-            node = n;
-            next = nullptr;
-        }
-
-        void setNext(Edge* e) {
-            this->next = e;
-        }
-
-        Edge* getNext() {
-            return this->next;
-        }
-
-        void addEdge(Node* n) {
-            i = this;
-            while (true) {
                 if (i->getNode()->getValue() == n->getValue()) {
-                    break;
-                }
-
-                if (i->getNext() == nullptr) {
-                    Edge* e = new Edge(n);
-                    i->setNext(e);
-                    break;
+                    return true;
                 }
 
                 i = i->getNext();
             }
+
+            return false;
         }
 };
 
@@ -191,14 +200,15 @@ class Graph
 
         // demais funcionalidades:
 
-        void insertNode(Node* n) {
+        Node* insertNode(int value, int degree) {
+            Node* n = new Node(value, degree);
             if (root == nullptr) {
                 root = n;
             } else {
                 Node* i = root;
                 while (true) {
                     if (i->getValue() == n->getValue()) {
-                        break;
+                        return i;
                     }
 
                     if (i->getNextInGraph() == nullptr) {
@@ -209,12 +219,13 @@ class Graph
                     i = i->getNextInGraph();
                 }
             }
+
+            return n;
         }
 
         void removeNode(Node* n) {
             if (n->getValue() == root->getValue()) {
                 root = n->getNextInGraph();
-                free(n);
             } else {
                 Node* i = root;
                 while (true) {

@@ -30,34 +30,25 @@ class Manager {
 		    	output << "Nó: " << i->getValue() << "\n";
 		    	output << "Grau: " << i->getDegree() << "\n";
 
-		    	Node* j = i->getNextInEdges();
+		    	Edge* j = i->getEdges();
 		    	if (j != nullptr) {
-		    		output << "Primeira aresta com: " << j->getValue() << "\n";
-		    		output << "Segunda aresta com: " << j->getNextInEdges()->getValue() << "\n";
-		    		output << "Terceira aresta com: " << j->getNextInEdges()->getNextInEdges()->getValue() << "\n";
-		    		output << "Quarta aresta com: " << j->getNextInEdges()->getNextInEdges()->getNextInEdges()->getValue() << "\n";
-			    	// bool hasEdges = false;
-			    	// while (true) {
-			    	// 	cout << j->getValue();
-			    	// 	if (j == nullptr) {
-			    	// 		break;
-			    	// 	}
+		    		output << "Possui arestas com: ";
+			    	while (true) {
+			    		if (j == nullptr) {
+			    			break;
+			    		}
+			    		output << j->getNode()->getValue() << " ";
 
-			    	// 	if (!hasEdges) {
-				    // 		output << "Possui arestas com: ";
-				    // 		hasEdges = true;
-				    // 	}
-
-			    	// 	output << j->getValue() << ", ";
-
-			    	// 	j = j->getNextInEdges();
-			    	// }
+			    		j = j->getNext();
+			    	}
 			    }
 
 		    	i = i->getNextInGraph();
 
-		    	output << "\n @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n";
+		    	output << "\n ================================ \n";
 		    }
+
+		    output << "\n @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n";
 
 		    return output;
 		}
@@ -94,11 +85,10 @@ class Manager {
 			    } else {
 			    	iss >> v1 >> v2;
 
-			    	Node* n1 = new Node(v1, 0);
-					Node* n2 = new Node(v2, 0);
+					// cout << n1->getValue() << " to " << n2->getValue() << "\n";
 
-					graph->insertNode(n1);
-					graph->insertNode(n2);
+					Node* n1 = graph->insertNode(v1, 0);
+					Node* n2 = graph->insertNode(v2, 0);
 					graph->insertEdge(n1, n2);
 			    }
 
