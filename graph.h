@@ -32,34 +32,54 @@ class Node
         int value, degree;
         Node* nextInGraph;
         Edge* edges;
+        bool visited;
 
     public:
         Node(int value, int degree) {
+            visited = false;
             this->value = value;
             this->degree = degree;
             nextInGraph = nullptr;
             edges = nullptr;
         }
+
+        bool wasVisited() {
+            return visited;
+        }
+
+        void visit() {
+            this->visited = true;
+        }
+
+        void flush() {
+            this->visited = false;
+        }
+
         //recupera o valor do nó
         int getValue() {
             return value;
         }
+
         //altera o valor do nó
         void setValue(int value) {
             this->value = value;
         }
+
         //recupera o grau do nó
         int getDegree() {
             return degree;
         }
+
         //altera o grau do nó
         void setDegree(int degree) {
             this->degree = degree;
         }
+
         //retorna o próximo nó no grafo
         Node* getNextInGraph() {
             return nextInGraph;
         }
+
         //altera o proximo nó no grafo
         void setNextInGraph(Node* n) {
             this->nextInGraph = n;
@@ -304,4 +324,21 @@ class Graph
         bool isBridge(Node* n1, Node* n2);
 
         // + 10  - Obtenha os componentes conexos do grafo. Quantos componentes conexos tem o grafo? Qual ́e o tamanho do maior e do menor componente conexo?
+
+        void flushNodes() {
+            if (root == nullptr) {
+                return;
+            }
+
+            Node* i = root;
+            while (true) {
+                if (i == nullptr) {
+                    break;
+                }
+
+                i->flush();
+
+                i = i->getNextInGraph();
+            }
+        }
 };
