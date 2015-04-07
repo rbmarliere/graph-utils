@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	try {
 		Graph* graph = manager.createGraph(input);
 
-		// manager.exportGraph(graph, output);
+		manager.exportGraph(graph, output);
 	} catch (std::string msg) {
 		cout << "Error: " << msg;
 	}

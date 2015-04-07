@@ -11,7 +11,7 @@ class Node
         Node(int value, int degree) {
             this->value = value;
             this->degree = degree;
-            nextInGraph = nextInEdges = NULL;
+            nextInGraph = nextInEdges = nullptr;
         }
         //recupera o valor do nó
         int getValue() {
@@ -49,21 +49,23 @@ class Node
         void insertEdge(Node* n) {
             Node* i = this;
             while (true) {
-                if (i == n) {
+                if (i->getValue() == n->getValue()) {
                     break;
                 }
 
-                if (i->getNextInEdges() == NULL) {
+                if (i->getNextInEdges() == nullptr) {
                     i->setNextInEdges(n);
                     break;
                 }
+
+                i = i->getNextInEdges();
             }
         }
 
         void removeEdge(Node* n) {
             Node* i = this;
             while (true) {
-                if (i->getNextInEdges() == NULL) {
+                if (i->getNextInEdges() == nullptr) {
                     break;
                 }
 
@@ -76,10 +78,10 @@ class Node
             }
         }
 
-        bool hasEdgeWith(Node* node) {
+        bool hasEdgeWith(Node* n) {
             Node* i = this;
-            while(i->getNextInEdges() != NULL) {
-                if (i == node) {
+            while(i->getNextInEdges() != nullptr) {
+                if (i->getValue() == n->getValue()) {
                     return true;
                 }
 
@@ -97,15 +99,13 @@ class Graph
         int num_nodes, num_edges;
     public:
         Graph() {
-            root = new Node(0, 0);
+            root = nullptr;
             num_nodes = num_edges = 0;
         }
 
         Node* getRoot() {
             return root;
         }
-
-        // escrever um grafo em um arquivo texto com as seguintes informações do grafo: número de vértices, número de arestas, grau médio, e distribuição empírica do grau dos vértices, que consiste na frequência relativa dos graus. Ou seja, f(d) = n(d)/n, onde f(d) é a frequência relativa do grau d que é dada pelo número de vértices com grau d (dado por n(d)) divido pelo número total de vértices do grafo (dado por n) :
 
         void setNumNodes(int num) {
             this->num_nodes = num;
@@ -133,7 +133,7 @@ class Graph
             while (true) {
                 sumDegrees += i->getDegree();
 
-                if (i->getNextInGraph() == NULL) {
+                if (i->getNextInGraph() == nullptr) {
                     break;
                 }
 
@@ -147,7 +147,7 @@ class Graph
             Node* i = root;
             int count = 0;
             while (true) {
-                if (i->getNextInGraph() == NULL) {
+                if (i->getNextInGraph() == nullptr) {
                     break;
                 }
 
@@ -157,41 +157,50 @@ class Graph
 
                 i = i->getNextInGraph();
             }
-            
+
             return count;
         }
 
         // demais funcionalidades:
 
         void insertNode(Node* n) {
-            Node* i = root;
-            while (true) {
-                if (i == n) {
-                    break;
-                }
+            if (root == nullptr) {
+                root = n;
+            } else {
+                Node* i = root;
+                while (true) {
+                    if (i->getValue() == n->getValue()) {
+                        break;
+                    }
 
-                if (i->getNextInGraph() == NULL) {
-                    i->setNextInGraph(n);
-                    break;
-                }
+                    if (i->getNextInGraph() == nullptr) {
+                        i->setNextInGraph(n);
+                        break;
+                    }
 
-                i = i->getNextInGraph();
+                    i = i->getNextInGraph();
+                }
             }
         }
 
         void removeNode(Node* n) {
-            Node* i = root;
-            while (true) {
-                if (i->getNextInGraph() == NULL) {
-                    break;
-                }
+            if (n->getValue() == root->getValue()) {
+                root = n->getNextInGraph();
+                free(n);
+            } else {
+                Node* i = root;
+                while (true) {
+                    if (i->getNextInGraph() == nullptr) {
+                        break;
+                    }
 
-                if (i->getNextInGraph() == n) {
-                    i->setNextInGraph(n->getNextInGraph());
-                    break;
-                }
+                    if (i->getNextInGraph() == n) {
+                        i->setNextInGraph(n->getNextInGraph());
+                        break;
+                    }
 
-                i = i->getNextInGraph();
+                    i = i->getNextInGraph();
+                }
             }
         }
 
