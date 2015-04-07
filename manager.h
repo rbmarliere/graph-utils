@@ -10,12 +10,11 @@ using namespace std;
 class Manager {
 	private:
 		ofstream& printHeader(ofstream &output, Graph* graph) {
-		    output << "graph-utils v" << VERSION << "\n";
-		    output << "############# REPORT #############\n\n";
-		    output << " -------------------------------- \n";
+		    output << "#### graph-utils v" << VERSION << " REPORT ####\n\n";
+		    output << "-------------------------------- \n";
 		    output << "Número de nós: " << graph->getNumNodes() << "\n";
 		    output << "Número de arestas: " << graph->getNumEdges() << "\n";
-		    output << " -------------------------------- \n";
+		    output << "-------------------------------- \n";
 
 		    return output;
 		}
@@ -45,10 +44,10 @@ class Manager {
 
 		    	i = i->getNextInGraph();
 
-		    	output << "\n ================================ \n";
+		    	output << "\n================================ \n";
 		    }
 
-		    output << "\n @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n";
+		    output << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n";
 
 		    return output;
 		}
