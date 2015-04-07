@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	// verifica se usuario inseriu quantidade certa de parametros
 	if (argc != 5) {
 		cout << "usage: graph-utils -i <input file> -o <output file>\n";
-		return 0;
+//		return 0;
 	}
 
 	// path para ambos os parametros

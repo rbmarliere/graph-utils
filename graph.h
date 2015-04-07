@@ -229,9 +229,9 @@ class Graph
             int i = degree;
             while (n!= NULL){
                 if (n -> getDegree() != i)
-                    return false
+                    return false;
                 else
-                    n = n-> getNextInGraph()
+                    n = n-> getNextInGraph();
            }
             return true;
         }
@@ -242,7 +242,7 @@ class Graph
                 i = i + n->getDegree();
                 n = n->getNextInGraph();
             }
-            if (i = getNumNodes * (getNumNodes - 1))
+            if (i == getNumNodes() * (getNumNodes() - 1))
                 return true;
             else
                 return false;
