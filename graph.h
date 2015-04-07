@@ -224,9 +224,31 @@ class Graph
             return node->getDegree();
         }
 
-        bool isRegular(int degree);
+        bool isRegular(int degree){//acho que não pode passar o grau não, tem que pegar um nó e ver o grau dele, ai grava numa variavel e vai fazendo com todos os nós, se der alguma alteração retorna falso.
+            Node* n = root;
+            int i = degree;
+            while (n!= NULL){
+                if (n -> getDegree() != i)
+                    return false
+                else
+                    n = n-> getNextInGraph()
+           }
+            return true;
+        }
+        bool isComplete(){
+            Node* n = root;
+            int i = 0;
+            while(n!= NULL){
+                i = i + n->getDegree();
+                n = n->getNextInGraph();
+            }
+            if (i = getNumNodes * (getNumNodes - 1))
+                return true;
+            else
+                return false;
+        }
 
-        bool isComplete();
+        //checa se o número de graus do grafo é n*(n-1), se for retorna verdadeiro se não for retorna falso
 
         bool areAdjacent(Node* source, Node* dest) {
             return source->hasEdgeWith(dest);
@@ -235,6 +257,7 @@ class Graph
         bool isConnected();
 
         bool nodesInSameComponent(Node* n1, Node* n2); // class Component? ou apenas outra instancia de Graph?
+        //verificar se tem caminho de um pro outro.
 
         bool isArticulationPoint(Node* n);
 
