@@ -215,8 +215,17 @@ class Graph
             return node->getDegree();
         }
 
-        bool isRegular(int degree);//acho que não pode passar o grau não, tem que pegar um nó e ver o grau dele, ai grava numa variavel e vai fazendo com todos os nós, se der alguma alteração retorna falso.
-
+        bool isRegular(int degree){//acho que não pode passar o grau não, tem que pegar um nó e ver o grau dele, ai grava numa variavel e vai fazendo com todos os nós, se der alguma alteração retorna falso.
+            Node* n = root;
+            int i = degree;
+            while (n!= NULL){
+                if (n -> getDegree() != i)
+                    return false
+                else
+                    n = n-> getNextInGraph()
+           }
+            return true;
+        }
         bool isComplete();
 
         //checa se o número de graus do grafo é n*(n-1), se for retorna verdadeiro se não for retorna falso
