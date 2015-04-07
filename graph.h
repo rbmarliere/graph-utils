@@ -226,7 +226,18 @@ class Graph
            }
             return true;
         }
-        bool isComplete();
+        bool isComplete(){
+            Node* n = root;
+            int i = 0;
+            while(n!= NULL){
+                i = i + n->getDegree();
+                n = n->getNextInGraph();
+            }
+            if (i = getNumNodes * (getNumNodes - 1))
+                return true;
+            else
+                return false;
+        }
 
         //checa se o número de graus do grafo é n*(n-1), se for retorna verdadeiro se não for retorna falso
 
