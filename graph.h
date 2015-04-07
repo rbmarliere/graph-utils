@@ -5,13 +5,13 @@ class Node
     private:
         int value, degree;
         Node* nextInGraph;
-        Node* nextInEdges;
+        Edge* edges;
 
     public:
         Node(int value, int degree) {
             this->value = value;
             this->degree = degree;
-            nextInGraph = nextInEdges = nullptr;
+            nextInGraph = edges = nullptr;
         }
         //recupera o valor do nó
         int getValue() {
@@ -38,8 +38,11 @@ class Node
             this->nextInGraph = n;
         }
          //retorna o proximo no adjacente
-        Node* getNextInEdges() {
-            return nextInEdges;
+        // Node* getNextInEdges() {
+        //     return nextInEdges;
+        // }
+        Edge* getEdges() {
+            return this->edges;
         }
         //altera o proximo nó adjacente
         void setNextInEdges(Node* n) {
@@ -47,19 +50,7 @@ class Node
         }
         //insere aresta
         void insertEdge(Node* n) {
-            Node* i = this;
-            while (true) {
-                if (i->getValue() == n->getValue()) {
-                    break;
-                }
-
-                if (i->getNextInEdges() == nullptr) {
-                    i->setNextInEdges(n);
-                    break;
-                }
-
-                i = i->getNextInEdges();
-            }
+            this->getEdges()->addEdge(n);
         }
 
         void removeEdge(Node* n) {
@@ -89,6 +80,43 @@ class Node
             }
 
             return false;
+        }
+};
+
+class Edge
+{
+    private:
+        Node* node;
+        Edge* next;
+    public:
+        Edge(Node* n) {
+            node = n;
+            next = nullptr;
+        }
+
+        void setNext(Edge* e) {
+            this->next = e;
+        }
+
+        Edge* getNext() {
+            return this->next;
+        }
+
+        void addEdge(Node* n) {
+            i = this;
+            while (true) {
+                if (i->getNode()->getValue() == n->getValue()) {
+                    break;
+                }
+
+                if (i->getNext() == nullptr) {
+                    Edge* e = new Edge(n);
+                    i->setNext(e);
+                    break;
+                }
+
+                i = i->getNext();
+            }
         }
 };
 
@@ -235,6 +263,7 @@ class Graph
            }
             return true;
         }
+
         bool isComplete(){
             Node* n = root;
             int i = 0;
