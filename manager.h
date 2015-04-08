@@ -14,7 +14,7 @@ class Manager {
 		    output << "---------------------------------\n";
 		    output << "Número de nós: " << graph->getNumNodes() << "\n";
 		    output << "Número de arestas: " << graph->getNumEdges() << "\n";
-		    output << "É conexo? " << graph->isConnected(graph) << "\n";
+		    output << "É conexo? " << graph->isConnected() << "\n";
 		    output << "---------------------------------\n";
 
 		    return output;

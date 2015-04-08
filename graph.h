@@ -314,13 +314,13 @@ class Graph
             return source->hasEdgeWith(dest);
         }
 
-        bool isConnected(Graph* graph)
+        bool isConnected()
         {
             std::stack<Node*> nodesInProgress;
 
-            graph->flushNodes();
+            this->flushNodes();
 
-            nodesInProgress.push(graph->getRoot());
+            nodesInProgress.push(this->getRoot());
 
             while (!nodesInProgress.empty()) {
                 nodesInProgress.top()->visit();
@@ -351,7 +351,7 @@ class Graph
                 }
             }
 
-            Node* root = graph->getRoot();
+            Node* root = this->getRoot();
             while(root != nullptr){
                 if(root->wasVisited() == false)
                 {
@@ -365,11 +365,11 @@ class Graph
             return true;
         }
 
-        bool nodesInSameComponent(Graph* graph, Node* n1, Node* n2)
+        bool nodesInSameComponent(Node* n1, Node* n2)
         {
             std::stack<Node*> nodesInProgress;
 
-            graph->flushNodes();
+            this->flushNodes();
 
             nodesInProgress.push(n1);
 
@@ -426,7 +426,7 @@ class Graph
 
 
         //Obtenha os componentes conexos do grafo. Quantos componentes conexos tem o grafo? Qual ́e o tamanho do maior e do menor componente conexo?
-        void connectedComponents(Graph* graph)
+        void connectedComponents()
         {
             int greater = 0;
             int lesser;
@@ -435,9 +435,9 @@ class Graph
 
             std::stack<Node*> nodesInProgress;
 
-            graph->flushNodes();
+            this->flushNodes();
 
-            nodesInProgress.push(graph->getRoot());
+            nodesInProgress.push(this->getRoot());
 
             while (!allVisited) {
 
@@ -473,7 +473,7 @@ class Graph
                     }
                 }
 
-                Node* root = graph->getRoot();
+                Node* root = this->getRoot();
                 while(root != nullptr){
                     if(root->wasVisited() == false)
                     {
