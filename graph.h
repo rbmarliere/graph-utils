@@ -365,14 +365,115 @@ class Graph
             return true;
         }
 
-        bool nodesInSameComponent(Node* n1, Node* n2); // class Component? ou apenas outra instancia de Graph?
-        //verificar se tem caminho de um pro outro.
+        bool nodesInSameComponent(Graph* graph, Node* n1, Node* n2)
+        {
+            std::stack<Node*> nodesInProgress;
+            
+            graph->flushNodes();
+            
+            nodesInProgress.push(n1);
+            
+            while (!nodesInProgress.empty()) {
+                nodesInProgress.top()->visit();
+                if(nodesInProgress.top()->getValue() == n2->getValue())
+                {
+                    return true;
+                }
+                Edge* edge  = nodesInProgress.top()->getEdges();
+                if(edge == nullptr)
+                {
+                    nodesInProgress.pop();
+                }
+                else
+                {
+                    bool foundVisitedNode = false;
+                    while (edge != nullptr && foundVisitedNode){
+                        if (edge->getNode()->wasVisited() == false){
+                            foundVisitedNode = true;
+                        }
+                        else
+                        {
+                            edge = edge->getNext();
+                        }
+                    }
+                    if (!foundVisitedNode) {
+                        nodesInProgress.pop();
+                    }
+                    else
+                    {
+                        nodesInProgress.push(edge->getNode());
+                    }
+                }
+            }
+            return false;
+        }
+   
 
         bool isArticulationPoint(Node* n);
 
         bool isBridge(Node* n1, Node* n2);
+    
+        //Obtenha os componentes conexos do grafo. Quantos componentes conexos tem o grafo? Qual ́e o tamanho do maior e do menor componente conexo?
+        void connectedComponents(Graph* graph)
+        {
+            int greater = 0;
+            int lesser;
+            
+            bool allVisited = false;
+            
+            std::stack<Node*> nodesInProgress;
+            
+            graph->flushNodes();
+            
+            nodesInProgress.push(graph->getRoot());
+            
+            while (!allVisited) {
+                
+                int count = 0;
+                
+                while (!nodesInProgress.empty()) {
+                    nodesInProgress.top()->visit();
+                    printf("%d",nodesInProgress.top()->getValue());
+                    Edge* edge  = nodesInProgress.top()->getEdges();
+                    if(edge == nullptr)
+                    {
+                        nodesInProgress.pop();
+                    }
+                    else
+                    {
+                        bool foundVisitedNode = false;
+                        while (edge != nullptr && foundVisitedNode){
+                            if (edge->getNode()->wasVisited() == false){
+                                foundVisitedNode = true;
+                            }
+                            else
+                            {
+                                edge = edge->getNext();
+                            }
+                        }
+                        if (!foundVisitedNode) {
+                            nodesInProgress.pop();
+                        }
+                        else
+                        {
+                            nodesInProgress.push(edge->getNode());
+                        }
+                    }
+                }
+                
+                Node* root = graph->getRoot();
+                while(root != nullptr){
+                    if(root->wasVisited() == false)
+                    {
+                        //return false;
+                    }
+                    root = root->getNextInGraph();
+                }
 
-        // + 10  - Obtenha os componentes conexos do grafo. Quantos componentes conexos tem o grafo? Qual ́e o tamanho do maior e do menor componente conexo?
+            }
+            
+        }
+    
 
         void flushNodes() {
             if (root == nullptr) {
