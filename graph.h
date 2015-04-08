@@ -97,6 +97,7 @@ class Node
         void insertEdge(Node* n) {
             if (edges == nullptr) {
                 this->setEdgeRoot(n);
+                degree++;
             } else {
                 Edge* i = getEdges();
                 while (true) {
@@ -107,6 +108,7 @@ class Node
                     if (i->getNext() == nullptr) {
                         Edge* e = new Edge(n);
                         i->setNext(e);
+                        degree++;
                         break;
                     }
 
@@ -116,19 +118,26 @@ class Node
         }
 
         void removeEdge(Node* n) {
-            // Node* i = this;
-            // while (true) {
-            //     if (i->getNextInEdges() == nullptr) {
-            //         break;
-            //     }
+            Edge* i = edges;
+            while (true) {
+                if (i == nullptr) {
+                    break;
+                }
 
-            //     if (i->getNextInEdges() == n) {
-            //         i->setNextInEdges(n->getNextInEdges());
-            //         break;
-            //     }
+                if (i->getNext() == nullptr && i->getNode()->getValue() == n->getValue()) {
+                    this->edges = nullptr;
+                    degree--;
+                    break;
+                }
 
-            //     i = i->getNextInEdges();
-            // }
+                if (i->getNext()->getNode()->getValue() == n->getValue()) {
+                    i->setNext(i->getNext()->getNext());
+                    degree--;
+                    break;
+                }
+
+                i = i->getNext();
+            }
         }
 
         bool hasEdgeWith(Node* n) {
@@ -267,16 +276,14 @@ class Graph
             source->insertEdge(dest);
             dest->insertEdge(source);
 
-            source->setDegree(source->getDegree()+1);
-            dest->setDegree(dest->getDegree()+1);
+            num_edges++;
         }
 
         void removeEdge(Node* source, Node* dest) {
             source->removeEdge(dest);
             dest->removeEdge(source);
 
-            source->setDegree(source->getDegree()-1);
-            dest->setDegree(dest->getDegree()-1);
+            num_edges--;
         }
 
         int getDegree(Node* node) {
@@ -417,10 +424,12 @@ class Graph
 
         bool isBridge(Node* n1, Node* n2){//remove a aresta e checa se os 2 nós delas permanecem conectados, depois refaz a aresta e retorna o resultado
             bool i = true;
-            Graph -> removeEdge(n1,n2);
-            if(nodesInSameComponent(g,n1,n2))
+            this->removeEdge(n1,n2);
+            if (nodesInSameComponent(n1,n2)) {
                 i = false;
-            Graph -> insertEdge(n1,n2);
+            }
+            this->insertEdge(n1,n2);
+
             return i;
         }
 

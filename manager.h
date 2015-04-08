@@ -85,19 +85,16 @@ class Manager {
 			    } else {
 			    	iss >> v1 >> v2;
 
-					// cout << n1->getValue() << " to " << n2->getValue() << "\n";
-
 					Node* n1 = graph->insertNode(v1, 0);
 					Node* n2 = graph->insertNode(v2, 0);
 					graph->insertEdge(n1, n2);
+					// graph->removeEdge(n1, n2);
 			    }
 
 				countLn++;
 			}
 
 			input.close();
-
-			graph->setNumEdges(countLn-1);
 
 			return graph;
 		}
