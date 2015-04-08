@@ -1,6 +1,6 @@
 #include <cstddef>
 #include <iostream>
-
+#include <stack>
 class Node;
 class Edge
 {
@@ -314,7 +314,56 @@ class Graph
             return source->hasEdgeWith(dest);
         }
 
-        bool isConnected();
+        bool isConnected(Graph* graph)
+        {
+            std::stack<Node*> nodesInProgress;
+            
+            graph->flushNodes();
+            
+            nodesInProgress.push(graph->getRoot());
+            
+            while (!nodesInProgress.empty()) {
+                nodesInProgress.top()->visit();
+                Edge* edge  = nodesInProgress.top()->getEdges();
+                if(edge == nullptr)
+                {
+                    nodesInProgress.pop();
+                }
+                else
+                {
+                    bool foundVisitedNode = false;
+                    while (edge != nullptr && foundVisitedNode){
+                        if (edge->getNode()->wasVisited() == false){
+                            foundVisitedNode = true;
+                        }
+                        else
+                        {
+                            edge = edge->getNext();
+                        }
+                    }
+                    if (!foundVisitedNode) {
+                        nodesInProgress.pop();
+                    }
+                    else
+                    {
+                        nodesInProgress.push(edge->getNode());
+                    }
+                }
+            }
+            
+            Node* root = graph->getRoot();
+            while(root != nullptr){
+                if(root->wasVisited() == false)
+                {
+                    return false;
+                }
+                root = root->getNextInGraph();
+            }
+            
+            
+            
+            return true;
+        }
 
         bool nodesInSameComponent(Node* n1, Node* n2); // class Component? ou apenas outra instancia de Graph?
         //verificar se tem caminho de um pro outro.
