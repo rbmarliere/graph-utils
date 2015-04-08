@@ -286,7 +286,7 @@ class Graph
         bool isRegular(int degree){//acho que não pode passar o grau não, tem que pegar um nó e ver o grau dele, ai grava numa variavel e vai fazendo com todos os nós, se der alguma alteração retorna falso.
             Node* n = root;
             int i = degree;
-            while (n!= NULL){
+            while (n!= nullptr){
                 if (n -> getDegree() != i)
                     return false;
                 else
@@ -295,10 +295,10 @@ class Graph
             return true;
         }
 
-        bool isComplete(){
+        bool isComplete(){//checa se o número de graus do grafo é n*(n-1), se for retorna verdadeiro se não for retorna falso
             Node* n = root;
             int i = 0;
-            while(n!= NULL){
+            while(n!= nullptr){
                 i = i + n->getDegree();
                 n = n->getNextInGraph();
             }
@@ -308,7 +308,7 @@ class Graph
                 return false;
         }
 
-        //checa se o número de graus do grafo é n*(n-1), se for retorna verdadeiro se não for retorna falso
+
 
         bool areAdjacent(Node* source, Node* dest) {
             return source->hasEdgeWith(dest);
@@ -317,11 +317,11 @@ class Graph
         bool isConnected(Graph* graph)
         {
             std::stack<Node*> nodesInProgress;
-            
+
             graph->flushNodes();
-            
+
             nodesInProgress.push(graph->getRoot());
-            
+
             while (!nodesInProgress.empty()) {
                 nodesInProgress.top()->visit();
                 Edge* edge  = nodesInProgress.top()->getEdges();
@@ -350,7 +350,7 @@ class Graph
                     }
                 }
             }
-            
+
             Node* root = graph->getRoot();
             while(root != nullptr){
                 if(root->wasVisited() == false)
@@ -359,20 +359,20 @@ class Graph
                 }
                 root = root->getNextInGraph();
             }
-            
-            
-            
+
+
+
             return true;
         }
 
         bool nodesInSameComponent(Graph* graph, Node* n1, Node* n2)
         {
             std::stack<Node*> nodesInProgress;
-            
+
             graph->flushNodes();
-            
+
             nodesInProgress.push(n1);
-            
+
             while (!nodesInProgress.empty()) {
                 nodesInProgress.top()->visit();
                 if(nodesInProgress.top()->getValue() == n2->getValue())
@@ -407,30 +407,42 @@ class Graph
             }
             return false;
         }
-   
 
-        bool isArticulationPoint(Node* n);
 
-        bool isBridge(Node* n1, Node* n2);
-    
+        bool isArticulationPoint(Node* n){//coloca todos os nós adjacentes ao nó em um vetor, remove o nó, ve se todos continuam na mesma componente conexa, readiciona o nó e retorna o resultado
+
+
+        }
+
+
+        bool isBridge(Node* n1, Node* n2){//remove a aresta e checa se os 2 nós delas permanecem conectados, depois refaz a aresta e retorna o resultado
+            bool i = true;
+            Graph -> removeEdge(n1,n2);
+            if(nodesInSameComponent(g,n1,n2))
+                i = false;
+            Graph -> insertEdge(n1,n2);
+            return i;
+        }
+
+
         //Obtenha os componentes conexos do grafo. Quantos componentes conexos tem o grafo? Qual ́e o tamanho do maior e do menor componente conexo?
         void connectedComponents(Graph* graph)
         {
             int greater = 0;
             int lesser;
-            
+
             bool allVisited = false;
-            
+
             std::stack<Node*> nodesInProgress;
-            
+
             graph->flushNodes();
-            
+
             nodesInProgress.push(graph->getRoot());
-            
+
             while (!allVisited) {
-                
+
                 int count = 0;
-                
+
                 while (!nodesInProgress.empty()) {
                     nodesInProgress.top()->visit();
                     printf("%d",nodesInProgress.top()->getValue());
@@ -460,7 +472,7 @@ class Graph
                         }
                     }
                 }
-                
+
                 Node* root = graph->getRoot();
                 while(root != nullptr){
                     if(root->wasVisited() == false)
@@ -471,9 +483,9 @@ class Graph
                 }
 
             }
-            
+
         }
-    
+
 
         void flushNodes() {
             if (root == nullptr) {
