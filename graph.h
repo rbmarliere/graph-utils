@@ -1,4 +1,4 @@
-#include <cstddef>
+o disso #include <cstddef>
 #include <iostream>
 #include <stack>
 class Node;
@@ -94,7 +94,7 @@ class Node
             this->edges = e;
         }
 
-        void insertEdge(Node* n) {
+        void insertEdge(Node* n) {//insere aresta
             if (edges == nullptr) {
                 this->setEdgeRoot(n);
                 degree++;
@@ -117,7 +117,7 @@ class Node
             }
         }
 
-        void removeEdge(Node* n) {
+        void removeEdge(Node* n) {//remove aresta
             Edge* i = edges;
             while (true) {
                 if (i == nullptr) {
@@ -140,7 +140,7 @@ class Node
             }
         }
 
-        bool hasEdgeWith(Node* n) {
+        bool hasEdgeWith(Node* n) {//verifica se e nós são adjacentes
             Edge* i = getEdges();
             while(true) {
                 if (i == nullptr) {
@@ -193,7 +193,7 @@ class Graph
             return getNumNodesByDegree(degree) / num_nodes;
         }
 
-        double getDegreeAverage() {
+        double getDegreeAverage() {//média de graus do grafo
             Node* i = root;
             int sumDegrees = 0;
             while (true) {
@@ -417,7 +417,27 @@ class Graph
 
 
         bool isArticulationPoint(Node* n){//coloca todos os nós adjacentes ao nó em um vetor, remove o nó, ve se todos continuam na mesma componente conexa, readiciona o nó e retorna o resultado
+            Node* a[];
+            int i = 0;
+            Node* x,y = n;
+            x->nextInEdge();
+            while (x != nullptr){//passa pra vetor
+                a[i]=x*;
+                i++;
+                x->nextInEdge();
+            }
+            i = 0;
+            removeNode(n)
+            while(a[i+1] != nullptr){
+                if(nodesInSameComponent(a[i], a[i+1])!= true){
+                    insertNode(y);
+                    return false;
+                }
+                else
+                    insertNode(y);
+                    return true;
 
+            }
 
         }
 
