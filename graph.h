@@ -1,4 +1,4 @@
-o disso #include <cstddef>
+#include <cstddef>
 #include <iostream>
 #include <stack>
 class Node;
@@ -417,28 +417,28 @@ class Graph
 
 
         bool isArticulationPoint(Node* n){//coloca todos os nós adjacentes ao nó em um vetor, remove o nó, ve se todos continuam na mesma componente conexa, readiciona o nó e retorna o resultado
-            Node* a[];
-            int i = 0;
-            Node* x,y = n;
-            x->nextInEdge();
-            while (x != nullptr){//passa pra vetor
-                a[i]=x*;
-                i++;
-                x->nextInEdge();
-            }
-            i = 0;
-            removeNode(n)
-            while(a[i+1] != nullptr){
-                if(nodesInSameComponent(a[i], a[i+1])!= true){
-                    insertNode(y);
-                    return false;
-                }
-                else
-                    insertNode(y);
-                    return true;
+            // Node* a[];
+            // int i = 0;
+            // Node* x,y = n;
+            // x->nextInEdge();
+            // while (x != nullptr){//passa pra vetor
+            //     a[i]=x*;
+            //     i++;
+            //     x->nextInEdge();
+            // }
+            // i = 0;
+            // removeNode(n)
+            // while(a[i+1] != nullptr){
+            //     if(nodesInSameComponent(a[i], a[i+1])!= true){
+            //         insertNode(y);
+            //         return false;
+            //     }
+            //     else
+            //         insertNode(y);
+            //         return true;
 
-            }
-
+            // }
+            return false;
         }
 
 

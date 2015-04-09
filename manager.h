@@ -29,6 +29,7 @@ class Manager {
 
 		    	output << "Nó: " << i->getValue() << "\n";
 		    	output << "Grau: " << i->getDegree() << "\n";
+		    	// output << "É de articulação? " << i->isArticulationPoint() << "\n";
 
 		    	Edge* j = i->getEdges();
 		    	if (j != nullptr) {
