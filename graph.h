@@ -1,7 +1,12 @@
 #include <cstddef>
 #include <iostream>
 #include <stack>
+
+using namespace std;
+
 class Node;
+class Component;
+class Graph;
 class Edge
 {
     private:
@@ -55,32 +60,26 @@ class Node
             this->visited = false;
         }
 
-        //recupera o valor do nó
         int getValue() {
             return value;
         }
 
-        //altera o valor do nó
         void setValue(int value) {
             this->value = value;
         }
 
-        //recupera o grau do nó
         int getDegree() {
             return degree;
         }
 
-        //altera o grau do nó
         void setDegree(int degree) {
             this->degree = degree;
         }
 
-        //retorna o próximo nó no grafo
         Node* getNextInGraph() {
             return nextInGraph;
         }
 
-        //altera o proximo nó no grafo
         void setNextInGraph(Node* n) {
             this->nextInGraph = n;
         }
@@ -94,7 +93,7 @@ class Node
             this->edges = e;
         }
 
-        void insertEdge(Node* n) {//insere aresta
+        void insertEdge(Node* n) {
             if (edges == nullptr) {
                 this->setEdgeRoot(n);
                 degree++;
@@ -117,7 +116,7 @@ class Node
             }
         }
 
-        void removeEdge(Node* n) {//remove aresta
+        void removeEdge(Node* n) {
             Edge* i = edges;
             while (true) {
                 if (i == nullptr) {
@@ -140,7 +139,7 @@ class Node
             }
         }
 
-        bool hasEdgeWith(Node* n) {//verifica se e nós são adjacentes
+        bool hasEdgeWith(Node* n) {
             Edge* i = getEdges();
             while(true) {
                 if (i == nullptr) {
@@ -158,15 +157,66 @@ class Node
         }
 };
 
+class Component {
+    private:
+        Graph* graph;
+        Component* next;
+
+    public:
+        Component(Graph* c) {
+            graph = c;
+            next = nullptr;
+        }
+
+        void setGraph(Graph* c) {
+            graph = c;
+        }
+
+        Graph* getGraph() {
+            return this->graph;
+        }
+
+        void setNext(Component* n) {
+            next = n;
+        }
+
+        Component* getNext() {
+            return this->next;
+        }
+};
+
 class Graph
 {
     private:
         Node* root;
+        Component* components;
         int num_nodes, num_edges;
     public:
         Graph() {
             root = nullptr;
+            components = nullptr;
             num_nodes = num_edges = 0;
+        }
+
+        void insertComponent(Graph* g) {
+            Component* newComp = new Component(g);
+            if (components == nullptr) {
+                components = newComp;
+            } else {
+                Component* c = this->getComponents();
+                while (true) {
+                    if (c->getNext() == nullptr) {
+                        c->setNext(newComp);
+                        break;
+                    }
+
+                    c = c->getNext();
+                }
+            }
+        }
+
+        Component* getComponents() {
+            return this->components;
         }
 
         Node* getRoot() {
@@ -189,11 +239,26 @@ class Graph
             return num_edges;
         }
 
-        int getDegreeFrequency(int degree) {
-            return getNumNodesByDegree(degree) / num_nodes;
+        int getMaxDegree() {
+            Node* i = root;
+            int max = 0;
+            while (true) {
+                int d = i->getDegree();
+                if (d > max) {
+                    max = d;
+                }
+
+                if (i->getNextInGraph() == nullptr) {
+                    break;
+                }
+
+                i = i->getNextInGraph();
+            }
+
+            return max;
         }
 
-        double getDegreeAverage() {//média de graus do grafo
+        double getDegreeAverage() {
             Node* i = root;
             int sumDegrees = 0;
             while (true) {
@@ -213,12 +278,12 @@ class Graph
             Node* i = root;
             int count = 0;
             while (true) {
-                if (i->getNextInGraph() == nullptr) {
-                    break;
-                }
-
                 if (i->getDegree() == degree) {
                     count++;
+                }
+
+                if (i->getNextInGraph() == nullptr) {
+                    break;
                 }
 
                 i = i->getNextInGraph();
@@ -227,12 +292,11 @@ class Graph
             return count;
         }
 
-        // demais funcionalidades:
-
         Node* insertNode(int value, int degree) {
             Node* n = new Node(value, degree);
             if (root == nullptr) {
                 root = n;
+                num_nodes++;
             } else {
                 Node* i = root;
                 while (true) {
@@ -242,6 +306,7 @@ class Graph
 
                     if (i->getNextInGraph() == nullptr) {
                         i->setNextInGraph(n);
+                        num_nodes++;
                         break;
                     }
 
@@ -252,9 +317,10 @@ class Graph
             return n;
         }
 
-        void removeNode(Node* n) {
+        void removeNode(Node* n) { //?
             if (n->getValue() == root->getValue()) {
                 root = n->getNextInGraph();
+                num_nodes--;
             } else {
                 Node* i = root;
                 while (true) {
@@ -264,6 +330,7 @@ class Graph
 
                     if (i->getNextInGraph() == n) {
                         i->setNextInGraph(n->getNextInGraph());
+                        num_nodes--;
                         break;
                     }
 
@@ -290,237 +357,205 @@ class Graph
             return node->getDegree();
         }
 
-        bool isRegular(int degree){//acho que não pode passar o grau não, tem que pegar um nó e ver o grau dele, ai grava numa variavel e vai fazendo com todos os nós, se der alguma alteração retorna falso.
+        bool isRegularByDegree(int degree){
             Node* n = root;
             int i = degree;
             while (n!= nullptr){
-                if (n -> getDegree() != i)
+                if (n->getDegree() != i)
                     return false;
                 else
-                    n = n-> getNextInGraph();
+                    n = n->getNextInGraph();
            }
             return true;
         }
 
-        bool isComplete(){//checa se o número de graus do grafo é n*(n-1), se for retorna verdadeiro se não for retorna falso
+        int isRegular() {
+            int d = 0;
+            while (d <= this->getMaxDegree()) {
+                if (this->isRegularByDegree(d) == true) {
+                    return d;
+                }
+
+                d++;
+            }
+
+            return 0;
+        }
+
+        bool isComplete() {
             Node* n = root;
             int i = 0;
+
             while(n!= nullptr){
                 i = i + n->getDegree();
                 n = n->getNextInGraph();
             }
-            if (i == getNumNodes() * (getNumNodes() - 1))
+
+            if (i == this->getNumNodes() * (this->getNumNodes() - 1)) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         }
-
-
 
         bool areAdjacent(Node* source, Node* dest) {
             return source->hasEdgeWith(dest);
         }
 
-        bool isConnected()
-        {
-            std::stack<Node*> nodesInProgress;
-
+        void depthFirstSearch() {
             this->flushNodes();
 
+            stack<Node*> nodesInProgress;
             nodesInProgress.push(this->getRoot());
 
             while (!nodesInProgress.empty()) {
-                nodesInProgress.top()->visit();
-                Edge* edge  = nodesInProgress.top()->getEdges();
-                if(edge == nullptr)
-                {
-                    nodesInProgress.pop();
-                }
-                else
-                {
-                    bool foundVisitedNode = false;
-                    while (edge != nullptr && foundVisitedNode){
-                        if (edge->getNode()->wasVisited() == false){
-                            foundVisitedNode = true;
-                        }
-                        else
-                        {
-                            edge = edge->getNext();
-                        }
-                    }
-                    if (!foundVisitedNode) {
-                        nodesInProgress.pop();
-                    }
-                    else
-                    {
+                Node* top = nodesInProgress.top();
+                nodesInProgress.pop();
+
+                top->visit();
+
+                Edge* edge  = top->getEdges();
+                while (edge != nullptr) {
+                    if (!edge->getNode()->wasVisited()) {
                         nodesInProgress.push(edge->getNode());
                     }
+
+                    edge = edge->getNext();
                 }
             }
+        }
+
+        bool isConnected() {
+            this->depthFirstSearch();
 
             Node* root = this->getRoot();
-            while(root != nullptr){
-                if(root->wasVisited() == false)
-                {
+            while (root != nullptr){
+                if (!root->wasVisited()) {
                     return false;
                 }
                 root = root->getNextInGraph();
             }
 
-
-
             return true;
         }
 
-        bool nodesInSameComponent(Node* n1, Node* n2)
-        {
-            std::stack<Node*> nodesInProgress;
+        void loadComponents() {
+            this->depthFirstSearch();
 
+            Graph* component1 = new Graph();
+            Graph* component2 = new Graph();
+            Node* n = this->getRoot();
+            while (n != nullptr) {
+                if (n->wasVisited() == true) {
+                    Node* newNode1 = component1->insertNode(n->getValue(), 0);
+
+                    Edge* e = n->getEdges();
+                    while (e != nullptr) {
+                        Node* newNode2 = component1->insertNode(e->getNode()->getValue(), 0);
+                        component1->insertEdge(newNode1, newNode2);
+
+                        e = e->getNext();
+                    }
+                } else {
+                    Node* newNode1 = component2->insertNode(n->getValue(), 0);
+
+                    Edge* e = n->getEdges();
+                    while (e != nullptr) {
+                        Node* newNode2 = component2->insertNode(e->getNode()->getValue(), 0);
+                        component2->insertEdge(newNode1, newNode2);
+
+                        e = e->getNext();
+                    }
+                }
+
+                n = n->getNextInGraph();
+            }
+
+            if (component1->getRoot() != nullptr) {
+                this->insertComponent(component1);
+            }
+
+            if (component2->getRoot() != nullptr) {
+                component2->loadComponents();
+            }
+
+            Component* c = component2->getComponents();
+            while (c != nullptr) {
+                this->insertComponent(c->getGraph());
+
+                c = c->getNext();
+            }
+        }
+
+        bool nodesInSameComponent(Node* n1, Node* n2) {
             this->flushNodes();
 
+            stack<Node*> nodesInProgress;
             nodesInProgress.push(n1);
 
             while (!nodesInProgress.empty()) {
-                nodesInProgress.top()->visit();
-                if(nodesInProgress.top()->getValue() == n2->getValue())
-                {
-                    return true;
-                }
-                Edge* edge  = nodesInProgress.top()->getEdges();
-                if(edge == nullptr)
-                {
-                    nodesInProgress.pop();
-                }
-                else
-                {
-                    bool foundVisitedNode = false;
-                    while (edge != nullptr && foundVisitedNode){
-                        if (edge->getNode()->wasVisited() == false){
-                            foundVisitedNode = true;
-                        }
-                        else
-                        {
-                            edge = edge->getNext();
-                        }
+                Node* top = nodesInProgress.top();
+                nodesInProgress.pop();
+
+                top->visit();
+
+                Edge* edge  = top->getEdges();
+                while (edge != nullptr) {
+                    if (edge->getNode()->getValue() == n2->getValue()) {
+                        return true;
                     }
-                    if (!foundVisitedNode) {
-                        nodesInProgress.pop();
-                    }
-                    else
-                    {
+
+                    if (!edge->getNode()->wasVisited()) {
                         nodesInProgress.push(edge->getNode());
                     }
+
+                    edge = edge->getNext();
                 }
             }
+
             return false;
         }
 
-
-        bool isArticulationPoint(Node* n){//coloca todos os nós adjacentes ao nó em um vetor, remove o nó, ve se todos continuam na mesma componente conexa, readiciona o nó e retorna o resultado
-            // Node* a[];
-            // int i = 0;
-            // Node* x,y = n;
-            // x->nextInEdge();
-            // while (x != nullptr){//passa pra vetor
-            //     a[i]=x*;
-            //     i++;
-            //     x->nextInEdge();
-            // }
-            // i = 0;
-            // removeNode(n)
-            // while(a[i+1] != nullptr){
-            //     if(nodesInSameComponent(a[i], a[i+1])!= true){
-            //         insertNode(y);
-            //         return false;
-            //     }
-            //     else
-            //         insertNode(y);
-            //         return true;
-
-            // }
-            return false;
-        }
-
-
-        bool isBridge(Node* n1, Node* n2){//remove a aresta e checa se os 2 nós delas permanecem conectados, depois refaz a aresta e retorna o resultado
-            bool i = true;
-            this->removeEdge(n1,n2);
-            if (nodesInSameComponent(n1,n2)) {
-                i = false;
-            }
-            this->insertEdge(n1,n2);
-
-            return i;
-        }
-
-
-        //Obtenha os componentes conexos do grafo. Quantos componentes conexos tem o grafo? Qual ́e o tamanho do maior e do menor componente conexo?
-        void connectedComponents()
-        {
-            int greater = 0;
-            int lesser;
-
-            bool allVisited = false;
-
-            std::stack<Node*> nodesInProgress;
-
-            this->flushNodes();
-
-            nodesInProgress.push(this->getRoot());
-
-            while (!allVisited) {
-
-                int count = 0;
-
-                while (!nodesInProgress.empty()) {
-                    nodesInProgress.top()->visit();
-                    printf("%d",nodesInProgress.top()->getValue());
-                    Edge* edge  = nodesInProgress.top()->getEdges();
-                    if(edge == nullptr)
-                    {
-                        nodesInProgress.pop();
-                    }
-                    else
-                    {
-                        bool foundVisitedNode = false;
-                        while (edge != nullptr && foundVisitedNode){
-                            if (edge->getNode()->wasVisited() == false){
-                                foundVisitedNode = true;
-                            }
-                            else
-                            {
-                                edge = edge->getNext();
-                            }
-                        }
-                        if (!foundVisitedNode) {
-                            nodesInProgress.pop();
-                        }
-                        else
-                        {
-                            nodesInProgress.push(edge->getNode());
-                        }
-                    }
+        bool isBridge(Node* n1, Node* n2) {
+            if (this->areAdjacent(n1, n2)) {
+                this->removeEdge(n1, n2);
+                bool nodesStillConnected = this->nodesInSameComponent(n1, n2);
+                this->insertEdge(n1, n2);
+                if (nodesStillConnected) {
+                    return false;
                 }
-
-                Node* root = this->getRoot();
-                while(root != nullptr){
-                    if(root->wasVisited() == false)
-                    {
-                        //return false;
-                    }
-                    root = root->getNextInGraph();
-                }
-
+                return true;
+            } else {
+                return false;
             }
-
         }
 
+        // bool isArticulationPoint(Node* n){ //?
+        //     Node* a[];
+        //     int i = 0;
+        //     Node* x,y = n;
+        //     x->nextInEdge();
+        //     while (x != nullptr){//passa pra vetor
+        //         a[i]=x*;
+        //         i++;
+        //         x->nextInEdge();
+        //     }
+        //     i = 0;
+        //     removeNode(n)
+        //     while(a[i+1] != nullptr){
+        //         if(nodesInSameComponent(a[i], a[i+1])!= true){
+        //             insertNode(y);
+        //             return false;
+        //         }
+        //         else
+        //             insertNode(y);
+        //             return true;
+
+        //     }
+        //     return false;
+        // }
 
         void flushNodes() {
-            if (root == nullptr) {
-                return;
-            }
-
             Node* i = root;
             while (true) {
                 if (i == nullptr) {

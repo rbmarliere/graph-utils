@@ -32,11 +32,13 @@ int main(int argc, char* argv[])
 	try {
 		Graph* graph = manager.createGraph(input);
 
+		graph->loadComponents();
+
 		manager.exportGraph(graph, output);
 
 		cout << "dumped to " << output << "\n";
 	} catch (std::string msg) {
-		cout << "Error: " << msg;
+		cout << "error: " << msg;
 	}
 
 	return 1;
