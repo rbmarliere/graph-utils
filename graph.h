@@ -141,7 +141,7 @@ class Node
 
         bool hasEdgeWith(Node* n) {
             Edge* i = getEdges();
-            while(true) {
+            while (true) {
                 if (i == nullptr) {
                     break;
                 }
@@ -219,6 +219,45 @@ class Graph
             return this->components;
         }
 
+        Component* getBiggestComp() {
+            int max = 0;
+            Component* returnValue = nullptr;
+            Component* c = this->getComponents();
+            while (c != nullptr) {
+                int aux = c->getGraph()->getNumNodes();
+                if (aux > max) {
+                    max = aux;
+                    returnValue = c;
+                }
+
+                c = c->getNext();
+            }
+
+            return returnValue;
+        }
+
+        Component* getSmallestComp() {
+            Component* returnValue = nullptr;
+            Component* c = this->getComponents();
+            int count = 0, min = 0;
+            while (c != nullptr) {
+                if (count == 0) {
+                    min = c->getGraph()->getNumNodes();
+                    count++;
+                }
+
+                int aux = c->getGraph()->getNumNodes();
+                if (aux < min) {
+                    min = aux;
+                    returnValue = c;
+                }
+
+                c = c->getNext();
+            }
+
+            return returnValue;
+        }
+
         Node* getRoot() {
             return root;
         }
@@ -271,7 +310,8 @@ class Graph
                 i = i->getNextInGraph();
             }
 
-            return sumDegrees / num_nodes;
+            double returnValue = (double) sumDegrees / (double) num_nodes;
+            return returnValue;
         }
 
         int getNumNodesByDegree(int degree) {
@@ -530,30 +570,59 @@ class Graph
             }
         }
 
-        // bool isArticulationPoint(Node* n){ //?
-        //     Node* a[];
-        //     int i = 0;
-        //     Node* x,y = n;
-        //     x->nextInEdge();
-        //     while (x != nullptr){//passa pra vetor
-        //         a[i]=x*;
-        //         i++;
-        //         x->nextInEdge();
-        //     }
-        //     i = 0;
-        //     removeNode(n)
-        //     while(a[i+1] != nullptr){
-        //         if(nodesInSameComponent(a[i], a[i+1])!= true){
-        //             insertNode(y);
-        //             return false;
-        //         }
-        //         else
-        //             insertNode(y);
-        //             return true;
+        bool isArticulationPoint(Node* n){ //?
+            // Node* a[];
+            // int i = 0;
+            // Node* x,y = n;
+            // x->nextInEdge();
+            // while (x != nullptr){//passa pra vetor
+            //     a[i]=x*;
+            //     i++;
+            //     x->nextInEdge();
+            // }
+            // i = 0;
+            // removeNode(n)
+            // while(a[i+1] != nullptr){
+            //     if(nodesInSameComponent(a[i], a[i+1])!= true){
+            //         insertNode(y);
+            //         return false;
+            //     }
+            //     else
+            //         insertNode(y);
+            //         return true;
 
-        //     }
-        //     return false;
-        // }
+            // }
+            // return false;
+            bool returnValue = false;
+
+            // if (this->getRoot() == nullptr || this->getRoot()->getValue() == n->getValue()) {
+            //     return returnValue;
+            // }
+
+            // cout << "NO: " << n->getValue() << "\n";
+
+            // Edge* e = n->getEdges();
+            // while (e->getNext() != nullptr) {
+            //     // cout << "aresta: " << e->getNode()->getValue() << "\n";
+
+            //     // this->removeEdge(n, e->getNext()->getNode());
+
+            //     // bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
+
+            //     // this->insertEdge(n, e->getNode());
+
+            //     // if (!areInSameComponent) {
+            //     //     returnValue = true;
+            //     //     break;
+            //     // }
+
+            //     e = e->getNext();
+
+            //     break;
+            // }
+
+            return returnValue;
+        }
 
         void flushNodes() {
             Node* i = root;

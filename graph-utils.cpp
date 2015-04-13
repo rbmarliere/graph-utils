@@ -32,8 +32,6 @@ int main(int argc, char* argv[])
 	try {
 		Graph* graph = manager.createGraph(input);
 
-		graph->loadComponents();
-
 		manager.exportGraph(graph, output);
 
 		cout << "dumped to " << output << "\n";

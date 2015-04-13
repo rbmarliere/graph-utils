@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string.h>
 #include "graph.h"
-#define VERSION 0.1
+#define VERSION 0.2
 
 using namespace std;
 
@@ -88,7 +88,7 @@ class Manager {
 
 		    	output << "Nó: " << i->getValue() << "\n";
 		    	output << "Grau: " << i->getDegree() << "\n";
-		    	// output << "É de articulação? " << i->isArticulationPoint() << "\n";
+		    	output << "É de articulação? " << graph->isArticulationPoint(i) << "\n";
 
 		    	Edge* j = i->getEdges();
 		    	if (j != nullptr) {
@@ -114,7 +114,9 @@ class Manager {
 		ofstream& printComponentsInfo(ofstream &output) {
 			printLine(output, '@');
 			printLine(output, '=');
-			output << "INFORMAÇÕES DAS COMPONENTES CONEXAS";
+			output << "INFORMAÇÕES DAS COMPONENTES CONEXAS\n\n";
+			output << "Número de nós da maior componente: " << graph->getBiggestComp()->getGraph()->getNumNodes() << "\n";
+			output << "Número de nós da menor componente: " << graph->getSmallestComp()->getGraph()->getNumNodes();
 			printLine(output, '=');
 
 			Graph* graphBackup = this->graph; // guarda singleton
@@ -178,12 +180,16 @@ class Manager {
 					Node* n2 = graph->insertNode(v2, 0);
 
 					graph->insertEdge(n1, n2);
+
+						// graph->removeEdge(n1, n2);
 			    }
 
 				countLn++;
 			}
 
 			input.close();
+
+			graph->loadComponents();
 
 			this->graph = graph;
 
