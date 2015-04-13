@@ -88,7 +88,7 @@ class Manager {
 
 		    	output << "Nó: " << i->getValue() << "\n";
 		    	output << "Grau: " << i->getDegree() << "\n";
-		    	output << "É de articulação? " << graph->isArticulationPoint(i) << "\n";
+		    	output << "É ponto de articulação? " << graph->isCutVertex(i) << "\n";
 
 		    	Edge* j = i->getEdges();
 		    	if (j != nullptr) {

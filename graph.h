@@ -26,6 +26,10 @@ class Edge
             return this->next;
         }
 
+        void setNode(Node* n) {
+            this->node = n;
+        }
+
         Node* getNode() {
             return this->node;
         }
@@ -98,7 +102,7 @@ class Node
                 this->setEdgeRoot(n);
                 degree++;
             } else {
-                Edge* i = getEdges();
+                Edge* i = this->getEdges();
                 while (true) {
                     if (i->getNode()->getValue() == n->getValue()) {
                         break;
@@ -117,30 +121,26 @@ class Node
         }
 
         void removeEdge(Node* n) {
-            Edge* i = edges;
-            while (true) {
-                if (i == nullptr) {
-                    break;
-                }
+            if (edges->getNode()->getValue() == n->getValue()) {
+                this->edges = edges->getNext();
+                degree--;
+            } else {
+                Edge* i = edges;
+                while (i != nullptr) {
+                    Edge* nxt = i->getNext();
 
-                if (i->getNext() == nullptr && i->getNode()->getValue() == n->getValue()) {
-                    this->edges = nullptr;
-                    degree--;
-                    break;
-                }
+                    if (nxt != nullptr && nxt->getNode()->getValue() == n->getValue()) {
+                        i->setNext(nxt->getNext());
+                        degree--;
+                    }
 
-                if (i->getNext()->getNode()->getValue() == n->getValue()) {
-                    i->setNext(i->getNext()->getNext());
-                    degree--;
-                    break;
+                    i = i->getNext();
                 }
-
-                i = i->getNext();
             }
         }
 
         bool hasEdgeWith(Node* n) {
-            Edge* i = getEdges();
+            Edge* i = this->getEdges();
             while (true) {
                 if (i == nullptr) {
                     break;
@@ -154,6 +154,16 @@ class Node
             }
 
             return false;
+        }
+
+        Edge* getLastEdge() {
+            Edge* i = this->getEdges();
+
+            while (i->getNext() != nullptr) {
+                i = i->getNext();
+            }
+
+            return i;
         }
 };
 
@@ -312,6 +322,7 @@ class Graph
             }
 
             double returnValue = (double) sumDegrees / (double) num_nodes;
+
             return returnValue;
         }
 
@@ -571,34 +582,33 @@ class Graph
             }
         }
 
-        bool isArticulationPoint(Node* n){ //?
+        bool isCutVertex(Node* n){ //?
             bool returnValue = false;
 
-            // if (this->getRoot() == nullptr || this->getRoot()->getValue() == n->getValue()) {
-            //     return returnValue;
-            // }
+            if (this->getRoot() == nullptr) {
+                return returnValue;
+            }
 
-            // cout << "NO: " << n->getValue() << "\n";
+            Edge* e = n->getEdges();
+            Edge* lastEdge = n->getLastEdge(); // grava ultima aresta para parar o loop a seguir
+            while (true) {
+                this->removeEdge(e->getNode(), n);
 
-            // Edge* e = n->getEdges();
-            // while (e->getNext() != nullptr) {
-            //     // cout << "aresta: " << e->getNode()->getValue() << "\n";
+                bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
 
-            //     this->removeEdge(n, e->getNode());
+                this->insertEdge(n, e->getNode());
 
-            //     bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
+                if (!areInSameComponent) {
+                    returnValue = true;
+                    break;
+                }
 
-            //     // this->insertEdge(n, e->getNode());
+                if (e->getNode()->getValue() == lastEdge->getNode()->getValue()) {
+                    break;
+                }
 
-            //     if (!areInSameComponent) {
-            //         returnValue = true;
-            //         break;
-            //     }
-
-            //     e = e->getNext();
-
-            //     break;
-            // }
+                e = e->getNext();
+            }
 
             return returnValue;
         }

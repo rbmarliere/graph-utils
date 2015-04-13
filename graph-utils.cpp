@@ -1,11 +1,14 @@
 #include <iostream>
 #include <cstring>
+#include <ctime>
 #include "manager.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
+	int start_s = clock();
+
 	Manager manager;
 
 	// verifica se usuario inseriu quantidade certa de parametros
@@ -35,9 +38,12 @@ int main(int argc, char* argv[])
 		manager.exportGraph(graph, output);
 
 		cout << "dumped to " << output << "\n";
-	} catch (std::string msg) {
+	} catch (string msg) {
 		cout << "error: " << msg;
 	}
+
+	int stop_s = clock();
+	cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC)*1000 << "ms\n";
 
 	return 1;
 }
