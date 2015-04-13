@@ -154,7 +154,9 @@ class Manager {
 		    printGraphInfo(output);
 		    printNodeInfo(output);
 		    printEachNodeInfo(output);
-		    printComponentsInfo(output);
+		    if (graph->getComponents()->getNext() != nullptr) {
+		    	printComponentsInfo(output);
+		    }
 		    printLine(output, '#');
 
 		    output.close();
