@@ -243,6 +243,7 @@ class Graph
             while (c != nullptr) {
                 if (count == 0) {
                     min = c->getGraph()->getNumNodes();
+                    returnValue = c;
                     count++;
                 }
 
@@ -571,28 +572,6 @@ class Graph
         }
 
         bool isArticulationPoint(Node* n){ //?
-            // Node* a[];
-            // int i = 0;
-            // Node* x,y = n;
-            // x->nextInEdge();
-            // while (x != nullptr){//passa pra vetor
-            //     a[i]=x*;
-            //     i++;
-            //     x->nextInEdge();
-            // }
-            // i = 0;
-            // removeNode(n)
-            // while(a[i+1] != nullptr){
-            //     if(nodesInSameComponent(a[i], a[i+1])!= true){
-            //         insertNode(y);
-            //         return false;
-            //     }
-            //     else
-            //         insertNode(y);
-            //         return true;
-
-            // }
-            // return false;
             bool returnValue = false;
 
             // if (this->getRoot() == nullptr || this->getRoot()->getValue() == n->getValue()) {
@@ -605,16 +584,16 @@ class Graph
             // while (e->getNext() != nullptr) {
             //     // cout << "aresta: " << e->getNode()->getValue() << "\n";
 
-            //     // this->removeEdge(n, e->getNext()->getNode());
+            //     this->removeEdge(n, e->getNode());
 
-            //     // bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
+            //     bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
 
             //     // this->insertEdge(n, e->getNode());
 
-            //     // if (!areInSameComponent) {
-            //     //     returnValue = true;
-            //     //     break;
-            //     // }
+            //     if (!areInSameComponent) {
+            //         returnValue = true;
+            //         break;
+            //     }
 
             //     e = e->getNext();
 

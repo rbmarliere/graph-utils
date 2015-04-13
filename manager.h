@@ -180,8 +180,6 @@ class Manager {
 					Node* n2 = graph->insertNode(v2, 0);
 
 					graph->insertEdge(n1, n2);
-
-						// graph->removeEdge(n1, n2);
 			    }
 
 				countLn++;
