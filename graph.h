@@ -369,7 +369,7 @@ class Graph
             return n;
         }
 
-        void removeNode(Node* n) { //?
+        void removeNode(Node* n) {
             if (n->getValue() == root->getValue()) {
                 root = n->getNextInGraph();
                 num_nodes--;
