@@ -1,0 +1,52 @@
+#################################
+##########APRESENTAÇÃO###########
+#################################
+
+graph-utils é uma ferramenta simples que se propõe a analisar um grafo
+lido a partir de um arquivo texto que possua a seguinte sintaxe:
+
+"
+n
+i j
+(...)
+"
+
+onde a primeira linha consta n representando o número de nós e as
+demais linhas constando pares de nós determinando arestas bidirecionais
+
+a análise realizada será disponibilizada também em um arquivo de texto
+com o seguinte formato:
+
+<<CABEÇALHO>>
+<<INFORMAÇÕES DO GRAFO>>
+<<INFORMAÇÕES DE SEUS NÓS>>
+<<INFORMAÇÕES DE CADA NÓ>>
+<<INFORMAÇÕES DE SUAS COMPONENTES CONEXAS*>>
+
+* quando houver.
+
+#################################
+##########COMO UTILIZAR##########
+#################################
+
+para compilar, é necessário um compilador C++.
+em sistemas unix:
+$ pwd
+/path/to/graph-utils
+$ ls
+src/ Makefile
+$ make
+
+a ferramenta necessita de dois parâmetros:
+	-i <<ARQUIVO PARA LEITURA DO GRAFO>>
+	-o <<ARQUIVO PARA GRAVAR A ANÁLISE>>
+
+exemplo:
+$ ./graph-utils -i input.txt -o output.txt
+
+
+
+
+
+autor: Ricardo de Barros Marliere
+
