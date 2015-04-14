@@ -34,7 +34,7 @@ em sistemas unix:
 $ pwd
 /path/to/graph-utils
 $ ls
-src/ Makefile
+Makefile README src/
 $ make
 
 a ferramenta necessita de dois parâmetros:
