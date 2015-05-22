@@ -1,15 +1,17 @@
 #include <iostream>
+#include <iomanip>
+#include <thread>
+#include <unistd.h>
 #include <sstream>
 #include <fstream>
 #include <string.h>
-#include "graph.h"
-#define VERSION 0.2
 
 using namespace std;
 
 class Manager {
 	private:
-		Graph* graph; // singleton
+		Graph* graph;
+		bool stopThread;
 
 		ofstream& printLine(ofstream &output, char c) {
 			int i = 0;
@@ -142,6 +144,55 @@ class Manager {
 			return output;
 		}
 
+		static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50) { // https://www.ross.click/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
+		    if ( (x != n) && (x % (n/100+1) != 0) ) return;
+
+		    float ratio  =  x/(float)n;
+		    int   c      =  ratio * w;
+
+		    cout << setw(3) << (int)(ratio*100) << "% [";
+		    for (int x=0; x<c; x++) cout << "=";
+		    for (int x=c; x<w; x++) cout << " ";
+		    cout << "]\r" << flush;
+		}
+
+		void loadbar2() {
+			char arrows[4] = { '/' , '|' , '\\' , '-' };
+    		int i = 0;
+    		this->stopThread = false;
+		    while (this->stopThread == false) {
+		        // cout << arrows[i];
+
+
+		        if (i > 2) {
+		            i = 0;
+		        	cout << "\r    \r";
+		        } else {
+		        	cout << ".";
+		            i++;
+		        }
+
+		        usleep(250);
+		    }
+		}
+
+		int countLines(char* path) {
+			ifstream count (path);
+			if (!count.is_open()) {
+				std::string errMsg("Error opening file \"");
+		    	throw errMsg + path + "\"";
+		    }
+
+		    int countLn = 0;
+			string line;
+		    while (getline(count, line)) {
+		    	countLn++;
+		    }
+		    count.close();
+
+		    return countLn;
+		}
+
 	public:
 		void exportGraph(Graph* graph, char* path) {
 			ofstream output (path);
@@ -149,6 +200,9 @@ class Manager {
 				std::string errMsg("Error opening file \"");
 		    	throw errMsg + path + "\"";
 		    }
+
+		    cout << "exporting graph...\n";
+		    // std::thread t(loadbar2);
 
 		    printHeader(output);
 		    printGraphInfo(output);
@@ -158,6 +212,10 @@ class Manager {
 		    	printComponentsInfo(output);
 		    }
 		    printLine(output, '#');
+
+		    // t.join();
+
+		    cout << "OK!\n";
 
 		    output.close();
 		}
@@ -170,26 +228,42 @@ class Manager {
 		    }
 
 			Graph* graph = new Graph();
-			int v1 = 0, v2 = 0, num_nodes = 0, countLn = 0;
+			int v1 = 0, v2 = 0, num_nodes = 0, i = 0;
+			int lines = this->countLines(path);
+			cout << path << ": " << lines << " lines\n";
 			string line;
-			while (getline(input, line)) {
-			    istringstream iss(line);
+			cout << "creating graph...\n";
 
-			    if (countLn != 0) {
-			    	iss >> v1 >> v2;
+			// std::thread teste(&Manager::loadbar2, this);
+			loadbar2();
 
-					Node* n1 = graph->insertNode(v1, 0);
-					Node* n2 = graph->insertNode(v2, 0);
+			// while (getline(input, line)) {
+			//     istringstream iss(line);
 
-					graph->insertEdge(n1, n2);
-			    }
+			//     if (i != 0) {
+			//     	iss >> v1 >> v2;
 
-				countLn++;
-			}
+			// 		Node* n1 = graph->insertNode(v1, 0);
+			// 		Node* n2 = graph->insertNode(v2, 0);
 
+			// 		graph->insertEdge(n1, n2);
+			//     }
+
+			//     i++;
+			//     // loadbar(i, lines);
+			// }
 			input.close();
 
+			// this->stopThread = true;
+			// teste.join();
+			cout << "OK!\n";
+			cout << "\n";
+
+
+			cout << "loading connected components...\n";
+
 			graph->loadComponents();
+			cout << "OK!\n";
 
 			this->graph = graph;
 

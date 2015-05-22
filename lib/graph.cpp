@@ -1,12 +1,10 @@
 #include <cstddef>
 #include <iostream>
 #include <stack>
+#include "graph.hpp"
 
 using namespace std;
 
-class Node;
-class Component;
-class Graph;
 class Edge
 {
     private:
@@ -167,7 +165,8 @@ class Node
         }
 };
 
-class Component {
+class Component
+{
     private:
         Graph* graph;
         Component* next;
@@ -582,7 +581,7 @@ class Graph
             }
         }
 
-        bool isCutVertex(Node* n){ //?
+        bool isCutVertex(Node* n) {
             bool returnValue = false;
 
             if (this->getRoot() == nullptr) {

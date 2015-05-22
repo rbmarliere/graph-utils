@@ -1,13 +1,13 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
-#include "manager.h"
+#include "../lib/manager.hpp"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-	int start_s = clock();
+	unsigned long int start_s = clock();
 
 	Manager manager;
 
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 		cout << "error: " << msg;
 	}
 
-	int stop_s = clock();
+	unsigned long int stop_s = clock();
 	cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC)*1000 << "ms\n";
 
 	return 1;
