@@ -20,4 +20,4 @@ graph.o: $(IDIR)/graph.cpp
 .PHONY: clean
 
 clean:
-	rm -f *.o graph-utils
+	rm -f *.o include/*.o graph-utils
