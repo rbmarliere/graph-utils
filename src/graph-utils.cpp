@@ -1,21 +1,14 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
-#include "../lib/manager.hpp"
+#include "../include/manager.hpp"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
 	unsigned long int start_s = clock();
-
 	Manager manager;
-
-	// verifica se usuario inseriu quantidade certa de parametros
-	if (argc != 5) {
-		cout << "usage: graph-utils -i <input file> -o <output file>\n";
-		return 0;
-	}
 
 	// path para ambos os parametros
 	char* input = nullptr;
@@ -32,12 +25,15 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	if (argc < 5 || input == nullptr || output == nullptr) {
+		cout << "usage: graph-utils -i <input file> -o <output file>\n";
+		return 0;
+	}
+
 	try {
 		Graph* graph = manager.importGraph(input);
 
 		manager.exportGraph(graph, output);
-
-		cout << "dumped to " << output << "\n";
 	} catch (string msg) {
 		cout << "error: " << msg;
 	}

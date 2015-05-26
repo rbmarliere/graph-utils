@@ -15,8 +15,6 @@ class Manager
 		std::ofstream& printNodeInfo(std::ofstream &output);
 		std::ofstream& printEachNodeInfo(std::ofstream &output);
 		std::ofstream& printComponentsInfo(std::ofstream &output);
-		static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50);
-		void loadbar2();
 		int countLines(char* path);
 	public:
 		void exportGraph(Graph* graph, char* path);
