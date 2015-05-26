@@ -1,8 +1,14 @@
+#ifndef GRAPH
+#define GRAPH
+
 class Node;
 class Component;
 class Graph;
 class Edge
 {
+	private:
+        Node* node;
+        Edge* next;
     public:
 		Edge(Node* n);
 		void setNext(Edge* e);
@@ -13,6 +19,12 @@ class Edge
 
 class Node
 {
+    private:
+        int value, degree;
+        Node* nextInGraph;
+        Edge* edges;
+        bool visited;
+
     public:
 		Node(int value, int degree);
 		bool wasVisited();
@@ -34,6 +46,10 @@ class Node
 
 class Component
 {
+    private:
+        Graph* graph;
+        Component* next;
+
     public:
 		Component(Graph* c);
 		void setGraph(Graph* c);
@@ -44,6 +60,11 @@ class Component
 
 class Graph
 {
+    private:
+        Node* root;
+        Component* components;
+        int num_nodes, num_edges;
+
     public:
 		Graph();
 		void insertComponent(Graph* g);
@@ -75,3 +96,5 @@ class Graph
 		bool isCutVertex(Node* n);
 		void flushNodes();
 };
+
+#endif

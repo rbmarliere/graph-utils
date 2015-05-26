@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	}
 
 	try {
-		Graph* graph = manager.createGraph(input);
+		Graph* graph = manager.importGraph(input);
 
 		manager.exportGraph(graph, output);
 

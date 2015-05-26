@@ -1,8 +1,14 @@
-#include "graph.hpp"
+#ifndef MANAGER
+#define MANAGER
 #define VERSION 0.2
+#include "graph.hpp"
 
-class Manager {
+class Manager
+{
 	private:
+		Graph* graph;
+		bool stopThread;
+
 		std::ofstream& printLine(std::ofstream &output, char c);
 		std::ofstream& printHeader(std::ofstream &output);
 		std::ofstream& printGraphInfo(std::ofstream &output);
@@ -14,5 +20,7 @@ class Manager {
 		int countLines(char* path);
 	public:
 		void exportGraph(Graph* graph, char* path);
-		Graph* createGraph(char* path);
+		Graph* importGraph(char* path);
 };
+
+#endif
