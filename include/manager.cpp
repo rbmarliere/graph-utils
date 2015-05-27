@@ -157,7 +157,7 @@ int Manager::countLines(char* path) {
     return countLn;
 }
 
-void Manager::exportGraph(Graph* graph, char* path) {
+void Manager::exportGraph(char* path) {
     ofstream output (path);
     if (!output.is_open()) {
         std::string errMsg("error opening file \"");
@@ -170,7 +170,7 @@ void Manager::exportGraph(Graph* graph, char* path) {
     printGraphInfo(output);
     printNodeInfo(output);
     printEachNodeInfo(output);
-    if (graph->getComponents()->getNext() != nullptr) {
+    if (this->graph->getComponents()->getNext() != nullptr) {
         printComponentsInfo(output);
     }
     printLine(output, '#');
@@ -182,7 +182,7 @@ void Manager::exportGraph(Graph* graph, char* path) {
     output.close();
 }
 
-Graph* Manager::importGraph(char* path) {
+void Manager::importGraph(char* path) {
     ifstream input (path);
     if (!input.is_open()) {
         std::string errMsg("error opening file \"");
@@ -220,6 +220,4 @@ Graph* Manager::importGraph(char* path) {
     cout << "done\n";
 
     this->graph = graph;
-
-    return graph;
 }

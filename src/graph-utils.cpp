@@ -31,9 +31,8 @@ int main(int argc, char* argv[])
 	}
 
 	try {
-		Graph* graph = manager.importGraph(input);
-
-		manager.exportGraph(graph, output);
+		manager.importGraph(input);
+		manager.exportGraph(output);
 	} catch (string msg) {
 		cout << "error: " << msg;
 	}

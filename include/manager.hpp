@@ -17,8 +17,8 @@ class Manager
 		std::ofstream& printComponentsInfo(std::ofstream &output);
 		int countLines(char* path);
 	public:
-		void exportGraph(Graph* graph, char* path);
-		Graph* importGraph(char* path);
+		void exportGraph(char* path);
+		void importGraph(char* path);
 };
 
 #endif
