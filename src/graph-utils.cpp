@@ -5,12 +5,18 @@
 
 using namespace std;
 
+/**
+ * Função principal do programa responsável por
+ * fazer o parsing dos argumentos e chamar o Manager
+ *
+ * @param  argc quantidade de argumentos inseridos
+ * @param  argv argumentos propriamente ditos
+ */
 int main(int argc, char* argv[])
 {
-	unsigned long int start_s = clock();
-	Manager manager;
+	unsigned long int start_s = clock(); // grava o tempo atual do relógio para medir ao final da execução
 
-	// path para ambos os parametros
+	// path para ambos os parametros (nome e caminho dos arquivos)
 	char* input = nullptr;
 	char* output = nullptr;
 
@@ -31,14 +37,15 @@ int main(int argc, char* argv[])
 	}
 
 	try {
+		Manager manager; // objeto Manager responsável por processar os dados
 		manager.importGraph(input);
 		manager.exportGraph(output);
 	} catch (string msg) {
 		cout << "error: " << msg;
 	}
 
-	unsigned long int stop_s = clock();
-	cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC)*1000 << "ms\n";
+	unsigned long int stop_s = clock(); // tempo final
+	cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC)*1000 << "ms\n"; // calcula o tempo final - tempo inicial para obter o tempo de processamento
 
 	return 1;
 }
