@@ -132,7 +132,7 @@ void Manager::loadbar(unsigned int x, unsigned int n, unsigned int w) {
     float ratio  =  x/(float)n;
     int   c      =  ratio * w;
     cout << setw(3) << (int)(ratio*100) << "% [";
-    for (int x=0; x<c; x++) cout << "=";
+    for (int x=0; x<c; x++) cout << "#";
     for (int x=c; x<w; x++) cout << " ";
     cout << "]\r" << flush;
 }

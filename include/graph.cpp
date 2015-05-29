@@ -372,10 +372,6 @@ void Graph::removeEdge(Node* source, Node* dest) {
     num_edges--;
 }
 
-int Graph::getDegree(Node* node) {
-    return node->getDegree();
-}
-
 bool Graph::isRegularByDegree(int degree){
     Node* n = root;
     int i = degree;
@@ -389,13 +385,13 @@ bool Graph::isRegularByDegree(int degree){
 }
 
 int Graph::isRegular() {
-    int d = 0;
-    while (d <= this->getMaxDegree()) {
+    int d = this->getMaxDegree();
+    while (d >= 0) {
         if (this->isRegularByDegree(d) == true) {
             return d;
         }
 
-        d++;
+        d--;
     }
 
     return 0;
