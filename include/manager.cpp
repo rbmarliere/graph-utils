@@ -1,6 +1,5 @@
 #include <iostream>
 #include <iomanip>
-#include <thread>
 #include <unistd.h>
 #include <sstream>
 #include <fstream>
@@ -9,7 +8,7 @@
 
 using namespace std;
 
-ofstream& Manager::printLine(ofstream &output, char c) {
+void Manager::printLine(ofstream &output, char c) {
     int i = 0;
 
     output << "\n";
@@ -18,20 +17,16 @@ ofstream& Manager::printLine(ofstream &output, char c) {
         i++;
     }
     output << "\n";
-
-    return output;
 }
 
-ofstream& Manager::printHeader(ofstream &output) {
+void Manager::printHeader(ofstream &output) {
     output << "#################################\n";
     output << "#### graph-utils v" << VERSION << " REPORT ####\n";
     output << "#################################";
     printLine(output, '=');
-
-    return output;
 }
 
-ofstream& Manager::printGraphInfo(ofstream &output) {
+void Manager::printGraphInfo(ofstream &output) {
     output << "INFORMAÇÕES DO GRAFO\n\n";
     output << "Número de nós: " << graph->getNumNodes() << "\n";
     output << "Número de arestas: " << graph->getNumEdges() << "\n";
@@ -48,11 +43,9 @@ ofstream& Manager::printGraphInfo(ofstream &output) {
 
     output << "Grau médio dos nós: " << graph->getDegreeAverage() << "";
     printLine(output, '=');
-
-    return output;
 }
 
-ofstream& Manager::printNodeInfo(ofstream &output) {
+void Manager::printNodeInfo(ofstream &output) {
     output << "INFORMAÇÕES DOS NÓS\n";
     output << "    Sintaxe: [d, n(d), f(d)], onde:\n";
     output << "        d representa o grau\n";
@@ -70,11 +63,9 @@ ofstream& Manager::printNodeInfo(ofstream &output) {
 
         d++;
     }
-
-    return output;
 }
 
-ofstream& Manager::printEachNodeInfo(ofstream &output) {
+void Manager::printEachNodeInfo(ofstream &output) {
     Node* i = graph->getRoot();
 
     while (true) {
@@ -105,11 +96,9 @@ ofstream& Manager::printEachNodeInfo(ofstream &output) {
     }
 
     printLine(output, '=');
-
-    return output;
 }
 
-ofstream& Manager::printComponentsInfo(ofstream &output) {
+void Manager::printComponentsInfo(ofstream &output) {
     printLine(output, '@');
     printLine(output, '=');
     output << "INFORMAÇÕES DAS COMPONENTES CONEXAS\n\n";
@@ -117,7 +106,7 @@ ofstream& Manager::printComponentsInfo(ofstream &output) {
     output << "Número de nós da menor componente: " << graph->getSmallestComp()->getGraph()->getNumNodes();
     printLine(output, '=');
 
-    Graph* graphBackup = this->graph; // guarda singleton
+    Graph* graphBackup = this->graph; // guarda "singleton"
 
     int count = 0;
     Component* c = graphBackup->getComponents();
@@ -136,8 +125,16 @@ ofstream& Manager::printComponentsInfo(ofstream &output) {
     }
 
     this->graph = graphBackup; // restaura
+}
 
-    return output;
+void Manager::loadbar(unsigned int x, unsigned int n, unsigned int w) {
+    if ( (x != n) && (x % (n/100+1) != 0) ) return;
+    float ratio  =  x/(float)n;
+    int   c      =  ratio * w;
+    cout << setw(3) << (int)(ratio*100) << "% [";
+    for (int x=0; x<c; x++) cout << "=";
+    for (int x=c; x<w; x++) cout << " ";
+    cout << "]\r" << flush;
 }
 
 int Manager::countLines(char* path) {
@@ -210,10 +207,11 @@ void Manager::importGraph(char* path) {
         }
 
         i++;
+        loadbar(i, lines, 50);
     }
     input.close();
 
-    cout << "done\n";
+    cout << "\ndone\n";
 
     cout << "loading connected components: \n";
     graph->loadComponents();
