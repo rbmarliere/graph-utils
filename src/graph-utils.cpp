@@ -45,10 +45,10 @@ int main(int argc, char* argv[])
 	}
 
 	unsigned long int stop_s = clock(); // tempo final
-	int milliseconds = (stop_s - start_s) / double(CLOCKS_PER_SEC)*1000;
+	int milliseconds = (stop_s - start_s) / double(CLOCKS_PER_SEC)*1000; // calcula o tempo final - tempo inicial para obter o tempo de processamento total
 	int seconds = (int) (milliseconds / 1000) % 60 ;
 	int minutes = (int) ((milliseconds / (1000*60)) % 60);
-	cout << "time: " << minutes << "m" << seconds << "s\n"; // calcula o tempo final - tempo inicial para obter o tempo de processamento total
+	cout << "time: " << minutes << "m" << seconds << "s\n";
 
 	return 1;
 }
