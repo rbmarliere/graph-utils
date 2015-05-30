@@ -189,7 +189,7 @@ void Manager::importGraph(char* path) {
     cout << "importing graph from ";
 
     Graph* graph = new Graph();
-    int v1 = 0, v2 = 0, num_nodes = 0, i = 0;
+    int v1 = 0, v2 = 0, i = 0;
     int lines = this->countLines(path);
     cout << path << " (" << lines << " lines): \n";
     string line;

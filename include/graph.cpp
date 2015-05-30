@@ -103,20 +103,22 @@ void Node::insertEdge(Node* n) {
 }
 
 void Node::removeEdge(Node* n) {
-    if (edges->getNode()->getValue() == n->getValue()) {
-        this->edges = edges->getNext();
-        degree--;
-    } else {
-        Edge* i = edges;
-        while (i != nullptr) {
-            Edge* nxt = i->getNext();
+    if (edges != nullptr) {
+        if (edges->getNode()->getValue() == n->getValue()) {
+            this->edges = edges->getNext();
+            degree--;
+        } else {
+            Edge* i = edges;
+            while (i != nullptr) {
+                Edge* nxt = i->getNext();
 
-            if (nxt != nullptr && nxt->getNode()->getValue() == n->getValue()) {
-                i->setNext(nxt->getNext());
-                degree--;
+                if (nxt != nullptr && nxt->getNode()->getValue() == n->getValue()) {
+                    i->setNext(nxt->getNext());
+                    degree--;
+                }
+
+                i = i->getNext();
             }
-
-            i = i->getNext();
         }
     }
 }
@@ -140,12 +142,16 @@ bool Node::hasEdgeWith(Node* n) {
 
 Edge* Node::getLastEdge() {
     Edge* i = this->getEdges();
+    
+    if (i != nullptr) {
+        while (i->getNext() != nullptr) {
+            i = i->getNext();
+        }
 
-    while (i->getNext() != nullptr) {
-        i = i->getNext();
+        return i;
+    } else {
+        return nullptr;
     }
-
-    return i;
 }
 
 Component::Component(Graph* c) {
@@ -360,14 +366,14 @@ void Graph::removeNode(Node* n) {
 
 void Graph::insertEdge(Node* source, Node* dest) {
     source->insertEdge(dest);
-    dest->insertEdge(source);
+//    dest->insertEdge(source);
 
     num_edges++;
 }
 
 void Graph::removeEdge(Node* source, Node* dest) {
     source->removeEdge(dest);
-    dest->removeEdge(source);
+//    dest->removeEdge(source);
 
     num_edges--;
 }
@@ -554,8 +560,8 @@ bool Graph::isCutVertex(Node* n) {
 
     Edge* e = n->getEdges();
     Edge* lastEdge = n->getLastEdge(); // grava ultima aresta para parar o loop a seguir
-    while (true) {
-        this->removeEdge(e->getNode(), n);
+    while (e != nullptr) {
+        this->removeEdge(n, e->getNode());
 
         bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
 
