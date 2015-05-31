@@ -1,0 +1,176 @@
+#################################
+#### graph-utils v0.2 REPORT ####
+#################################
+=================================
+INFORMAÇÕES DO GRAFO
+
+Número de nós: 8
+Número de arestas: 14
+É conexo? 1
+É completo? 0
+É regular? 0
+Grau médio dos nós: 1.75
+=================================
+INFORMAÇÕES DOS NÓS
+    Sintaxe: [d, n(d), f(d)], onde:
+        d representa o grau
+        n(d) o número de nós com este grau
+        f(d) a distribuição empírica do grau
+
+[1, 3, 0.375]
+[2, 4, 0.5]
+[3, 1, 0.125]
+
+---------------------------------
+Nó: 1
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 2
+---------------------------------
+Nó: 2
+Grau: 3
+É ponto de articulação? 1
+Possui arestas com: 6 5 3
+---------------------------------
+Nó: 3
+Grau: 2
+É ponto de articulação? 1
+Possui arestas com: 7 4
+---------------------------------
+Nó: 4
+Grau: 2
+É ponto de articulação? 1
+Possui arestas com: 8 3
+---------------------------------
+Nó: 5
+Grau: 2
+É ponto de articulação? 1
+Possui arestas com: 6 1
+---------------------------------
+Nó: 6
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 7
+---------------------------------
+Nó: 7
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 6
+---------------------------------
+Nó: 8
+Grau: 2
+É ponto de articulação? 1
+Possui arestas com: 4 7
+=================================
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+=================================
+INFORMAÇÕES DAS COMPONENTES CONEXAS
+
+Número de nós da maior componente: 3
+Número de nós da menor componente: 2
+=================================
+COMPONENTE 1
+=================================
+INFORMAÇÕES DO GRAFO
+
+Número de nós: 3
+Número de arestas: 3
+É conexo? 1
+É completo? 0
+É regular? 1-regular
+Grau médio dos nós: 1
+=================================
+INFORMAÇÕES DOS NÓS
+    Sintaxe: [d, n(d), f(d)], onde:
+        d representa o grau
+        n(d) o número de nós com este grau
+        f(d) a distribuição empírica do grau
+
+[1, 3, 1]
+
+---------------------------------
+Nó: 1
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 2
+---------------------------------
+Nó: 5
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 1
+---------------------------------
+Nó: 2
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 5
+=================================
+COMPONENTE 2
+=================================
+INFORMAÇÕES DO GRAFO
+
+Número de nós: 3
+Número de arestas: 4
+É conexo? 1
+É completo? 0
+É regular? 0
+Grau médio dos nós: 1.33333
+=================================
+INFORMAÇÕES DOS NÓS
+    Sintaxe: [d, n(d), f(d)], onde:
+        d representa o grau
+        n(d) o número de nós com este grau
+        f(d) a distribuição empírica do grau
+
+[1, 2, 0.666667]
+[2, 1, 0.333333]
+
+---------------------------------
+Nó: 3
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 4
+---------------------------------
+Nó: 4
+Grau: 2
+É ponto de articulação? 1
+Possui arestas com: 8 3
+---------------------------------
+Nó: 8
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 4
+=================================
+COMPONENTE 3
+=================================
+INFORMAÇÕES DO GRAFO
+
+Número de nós: 2
+Número de arestas: 2
+É conexo? 1
+É completo? 1
+É regular? 1-regular
+Grau médio dos nós: 1
+=================================
+INFORMAÇÕES DOS NÓS
+    Sintaxe: [d, n(d), f(d)], onde:
+        d representa o grau
+        n(d) o número de nós com este grau
+        f(d) a distribuição empírica do grau
+
+[1, 2, 1]
+
+---------------------------------
+Nó: 7
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 6
+---------------------------------
+Nó: 6
+Grau: 1
+É ponto de articulação? 1
+Possui arestas com: 7
+=================================
+
+#################################

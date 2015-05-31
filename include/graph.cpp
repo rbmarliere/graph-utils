@@ -366,15 +366,11 @@ void Graph::removeNode(Node* n) {
 
 void Graph::insertEdge(Node* source, Node* dest) {
     source->insertEdge(dest);
-//    dest->insertEdge(source);
-
     num_edges++;
 }
 
 void Graph::removeEdge(Node* source, Node* dest) {
     source->removeEdge(dest);
-//    dest->removeEdge(source);
-
     num_edges--;
 }
 
@@ -423,11 +419,11 @@ bool Graph::areAdjacent(Node* source, Node* dest) {
     return source->hasEdgeWith(dest);
 }
 
-void Graph::depthFirstSearch() {
+void Graph::depthFirstSearch(Node* searchRoot) {
     this->flushNodes();
 
     stack<Node*> nodesInProgress;
-    nodesInProgress.push(this->getRoot());
+    nodesInProgress.push(searchRoot);
 
     while (!nodesInProgress.empty()) {
         Node* top = nodesInProgress.top();
@@ -447,60 +443,77 @@ void Graph::depthFirstSearch() {
 }
 
 bool Graph::isConnected() {
-    this->depthFirstSearch();
+    this->depthFirstSearch(this->getRoot());
 
-    Node* root = this->getRoot();
-    while (root != nullptr){
-        if (!root->wasVisited()) {
+    Node* i = this->getRoot();
+    while (i != nullptr){
+        if (!i->wasVisited()) {
             return false;
         }
-        root = root->getNextInGraph();
+        i = i->getNextInGraph();
     }
 
     return true;
 }
 
 void Graph::loadComponents() {
-    this->depthFirstSearch();
+    this->depthFirstSearch(this->getRoot());
 
-    Graph* component1 = new Graph();
-    Graph* component2 = new Graph();
+    Graph* toBeChecked = new Graph();
+    Graph* gT = this->transpose();
     Node* n = this->getRoot();
     while (n != nullptr) {
         if (n->wasVisited() == true) {
-            Node* newNode1 = component1->insertNode(n->getValue(), 0);
+            Graph* component = new Graph();
+            Node* n_in_gT = gT->getNodeByValue(n->getValue());
+            gT->depthFirstSearch(n_in_gT);
 
-            Edge* e = n->getEdges();
-            while (e != nullptr) {
-                Node* newNode2 = component1->insertNode(e->getNode()->getValue(), 0);
-                component1->insertEdge(newNode1, newNode2);
+            Node* gT_n = gT->getRoot();
+            while (gT_n != nullptr) {
+                if (gT_n->wasVisited() == true) {
+                    // se o nó foi visitado no grafo transposto, então faz parte de uma componente conexa
+                    Node* newNode1 = component->insertNode(gT_n->getValue(), 0);
 
-                e = e->getNext();
+                    Edge* e = gT_n->getEdges();
+                    while (e != nullptr) {
+                        Node* newNode2 = component->insertNode(e->getNode()->getValue(), 0);
+                        component->insertEdge(newNode2, newNode1);
+
+                        e = e->getNext();
+                    }
+                } else {
+                    // senão é anexado ao subgrafo que será posteriormente analisado na chamada recursiva deste método
+                    Node* newNode1 = toBeChecked->insertNode(gT_n->getValue(), 0);
+
+                    Edge* e = gT_n->getEdges();
+                    while (e != nullptr) {
+                        if (e->getNode()->wasVisited() == false) {
+                            Node* newNode2 = toBeChecked->insertNode(e->getNode()->getValue(), 0);
+                            toBeChecked->insertEdge(newNode2, newNode1);
+                        }
+
+                        e = e->getNext();
+                    }
+                }
+
+                gT_n = gT_n->getNextInGraph();
             }
-        } else {
-            Node* newNode1 = component2->insertNode(n->getValue(), 0);
 
-            Edge* e = n->getEdges();
-            while (e != nullptr) {
-                Node* newNode2 = component2->insertNode(e->getNode()->getValue(), 0);
-                component2->insertEdge(newNode1, newNode2);
-
-                e = e->getNext();
+            if (component->getRoot() != nullptr) {
+                this->insertComponent(component);
             }
+
+            break;
         }
 
         n = n->getNextInGraph();
     }
 
-    if (component1->getRoot() != nullptr) {
-        this->insertComponent(component1);
+    if (toBeChecked->getRoot() != nullptr) {
+        toBeChecked->loadComponents();
     }
 
-    if (component2->getRoot() != nullptr) {
-        component2->loadComponents();
-    }
-
-    Component* c = component2->getComponents();
+    Component* c = toBeChecked->getComponents();
     while (c != nullptr) {
         this->insertComponent(c->getGraph());
 
@@ -563,7 +576,7 @@ bool Graph::isCutVertex(Node* n) {
     while (e != nullptr) {
         this->removeEdge(n, e->getNode());
 
-        bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
+        bool areInSameComponent = this->nodesInSameComponent(n, e->getNode()) && this->nodesInSameComponent(e->getNode(), n); // ?
 
         this->insertEdge(n, e->getNode());
 
@@ -593,4 +606,34 @@ void Graph::flushNodes() {
 
         i = i->getNextInGraph();
     }
+}
+
+Graph* Graph::transpose() {
+    Graph* gT = new Graph();
+
+    Node* i = this->getRoot();
+    while (i != nullptr) {
+        Edge* e = i->getEdges();
+        while (e != nullptr) {
+            Node* n1 = gT->insertNode(i->getValue(), 0);
+            Node* n2 = gT->insertNode(e->getNode()->getValue(), 0);
+            gT->insertEdge(n2, n1);
+            e = e->getNext();
+        }
+        i = i->getNextInGraph();
+    }
+
+    return gT;
+}
+
+Node* Graph::getNodeByValue(int value) {
+    Node* i = this->getRoot();
+    while (i != nullptr) {
+        if (i->getValue() == value) {
+            return i;
+        }
+        i = i->getNextInGraph();
+    }
+
+    return nullptr;
 }

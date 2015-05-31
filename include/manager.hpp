@@ -6,7 +6,7 @@
 /**
  * CLASSE MANAGER
  * Responsável pelo processamento dos dados fornecidos pelo usuário e também pelo fornecimento da saída do programa.
- */	
+ */
 class Manager
 {
 	private:
@@ -55,7 +55,7 @@ class Manager
 		 * @param n índice final
 		 * @param w largura da barra
 		 */
-		void loadbar(unsigned int x, unsigned int n, unsigned int w); 
+		void loadbar(unsigned int x, unsigned int n, unsigned int w);
 
 		/**
 		 * função auxiliar para contar o número de linhas de um arquivo

@@ -81,12 +81,12 @@ void Manager::printEachNodeInfo(ofstream &output) {
 
         Edge* j = i->getEdges();
         if (j != nullptr) {
-            output << "Possui arestas com: ";
+            output << "Possui arestas com:";
             while (true) {
                 if (j == nullptr) {
                     break;
                 }
-                output << j->getNode()->getValue() << " ";
+                output << " " << j->getNode()->getValue();
 
                 j = j->getNext();
             }
@@ -167,7 +167,7 @@ void Manager::exportGraph(char* path) {
     printGraphInfo(output);
     printNodeInfo(output);
     printEachNodeInfo(output);
-    if (this->graph->getComponents()->getNext() != nullptr) {
+    if (this->graph->getComponents() != nullptr) {
         printComponentsInfo(output);
     }
     printLine(output, '#');
