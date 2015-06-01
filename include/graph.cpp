@@ -709,14 +709,16 @@ Graph* Graph::getMST_Kruskal() {
     Graph* g_copy = this->copy();
     g_copy->removeAllEdges();
     for (vector<Edge*>::iterator it = edges.begin(); it != edges.end(); it++) {
-        // insere aresta por aresta presente no grafo principal, de forma crescente
-        Node* n1 = g_copy->getNodeByValue((*it)->getParent()->getValue());
-        Node* n2 = g_copy->getNodeByValue((*it)->getNode()->getValue());
-        g_copy->insertEdge(n1, n2, (*it)->getWeight());
+        if (this->areAdjacent((*it)->getNode(), (*it)->getParent())) { // verifica se existe a aresta inversa!
+            // insere aresta por aresta presente no grafo principal, de forma crescente
+            Node* n1 = g_copy->getNodeByValue((*it)->getParent()->getValue());
+            Node* n2 = g_copy->getNodeByValue((*it)->getNode()->getValue());
+            g_copy->insertEdge(n1, n2, (*it)->getWeight());
 
-        if (g_copy->hasCycle()) {
-            // se uma aresta gera ciclo ao ser inserida, deve ser removida
-            g_copy->removeEdge(n1, n2);
+            if (g_copy->hasCycle()) {
+                // se uma aresta gera ciclo ao ser inserida, deve ser removida
+                g_copy->removeEdge(n1, n2);
+            }
         }
 
         if (g_copy->isConnected()) {
