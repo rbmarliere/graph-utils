@@ -648,18 +648,20 @@ Graph* Graph::getMST_Kruskal() {
 
 Graph* Graph::getMaxClique() {
     Node* i = this->getHighestDegreeNode(); // pega nó de maior grau
+    int highestDegree = i->getDegree();
+    int highestDegree_val = i->getValue(); // guarda seu valor para posterior identificação (pois não pode ser removido das combinações)
     this->depthFirstSearch(i); // visita todos os nós alcançáveis a partir dele
 
-    Graph* clique = new Graph(); // monta o grafo correspondente
+    Graph* initial = new Graph(); // monta o grafo correspondente
     while (i != nullptr) {
         if (i->wasVisited() == true) {
-            Node* newNode1 = clique->insertNode(i->getValue(), 0);
+            Node* newNode1 = initial->insertNode(i->getValue(), 0);
 
             Edge* e = i->getEdges();
             while (e != nullptr) {
                 if (e->getNode()->wasVisited() == true) {
-                    Node* newNode2 = clique->insertNode(e->getNode()->getValue(), 0);
-                    clique->insertEdge(newNode1, newNode2);
+                    Node* newNode2 = initial->insertNode(e->getNode()->getValue(), 0);
+                    initial->insertEdge(newNode1, newNode2);
                 }
 
                 e = e->getNext();
@@ -669,14 +671,18 @@ Graph* Graph::getMaxClique() {
         i = i->getNextInGraph();
     }
 
-    // while (clique->getRoot() != nullptr) {
-    //     if (clique->isComplete()) {
-    //         return clique;
-    //     }
-
-
-    // }
-    for (int i = i->getDegree(); i = 0; i--) {
-        
+    if (initial->isComplete()) {
+        return initial;
     }
+
+    for (int i = highestDegree; i = 0; i--) {
+        int combination_factor = highestDegree - i;
+        Graph* clique = initial->checkSubsetsBy(combination_factor);
+
+        if (clique != nullptr) {
+            return clique;
+        }
+    }
+
+    return nullptr;
 }
