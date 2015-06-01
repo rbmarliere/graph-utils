@@ -263,7 +263,7 @@ int Graph::getNumEdges() {
     return num_edges;
 }
 
-int Graph::getMaxDegree() {
+Node* Graph::getHighestDegreeNode() {
     Node* i = root;
     int max = 0;
     while (true) {
@@ -279,7 +279,7 @@ int Graph::getMaxDegree() {
         i = i->getNextInGraph();
     }
 
-    return max;
+    return i;
 }
 
 double Graph::getDegreeAverage() {
@@ -388,7 +388,7 @@ bool Graph::isRegularByDegree(int degree){
 }
 
 int Graph::isRegular() {
-    int d = this->getMaxDegree();
+    int d = this->getHighestDegreeNode()->getDegree();
     while (d >= 0) {
         if (this->isRegularByDegree(d) == true) {
             return d;
@@ -644,4 +644,39 @@ Graph* Graph::getMST_Prim() {
 
 Graph* Graph::getMST_Kruskal() {
 
+}
+
+Graph* Graph::getMaxClique() {
+    Node* i = this->getHighestDegreeNode(); // pega nó de maior grau
+    this->depthFirstSearch(i); // visita todos os nós alcançáveis a partir dele
+
+    Graph* clique = new Graph(); // monta o grafo correspondente
+    while (i != nullptr) {
+        if (i->wasVisited() == true) {
+            Node* newNode1 = clique->insertNode(i->getValue(), 0);
+
+            Edge* e = i->getEdges();
+            while (e != nullptr) {
+                if (e->getNode()->wasVisited() == true) {
+                    Node* newNode2 = clique->insertNode(e->getNode()->getValue(), 0);
+                    clique->insertEdge(newNode1, newNode2);
+                }
+
+                e = e->getNext();
+            }
+        }
+
+        i = i->getNextInGraph();
+    }
+
+    // while (clique->getRoot() != nullptr) {
+    //     if (clique->isComplete()) {
+    //         return clique;
+    //     }
+
+
+    // }
+    for (int i = i->getDegree(); i = 0; i--) {
+        
+    }
 }

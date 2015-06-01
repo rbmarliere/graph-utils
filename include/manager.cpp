@@ -53,7 +53,7 @@ void Manager::printNodeInfo(ofstream &output) {
     output << "        f(d) a distribuição empírica do grau\n\n";
 
     int d = 0;
-    while (d <= graph->getMaxDegree()) {
+    while (d <= graph->getHighestDegreeNode()->getDegree()) {
         int num_nodes_by_d = graph->getNumNodesByDegree(d);
         double f = (double) num_nodes_by_d / (double) graph->getNumNodes();
 
