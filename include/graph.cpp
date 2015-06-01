@@ -464,7 +464,7 @@ void Graph::depthFirstSearch(Node* searchRoot) {
 
         top->visit();
 
-        Edge* edge  = top->getEdges();
+        Edge* edge = top->getEdges();
         while (edge != nullptr) {
             if (!edge->getNode()->wasVisited()) {
                 nodesInProgress.push(edge->getNode());
@@ -744,11 +744,16 @@ vector<Edge*> Graph::getSortedEdges() {
 vector<Node*> Graph::getTransitiveClosureOf(Node* n, bool direct) {
     vector<Node*> closure;
 
-    Graph* g = direct ? this : this->transpose();
+    Graph* g;
+    if (direct == true) {
+        g = this;
+    } else {
+        g = this->transpose();
+    }
 
-    g->depthFirstSearch(this->getRoot());
+    g->depthFirstSearch(n);
 
-    Node* i = this->getRoot();
+    Node* i = g->getRoot();
     while (i != nullptr) {
         if (i->wasVisited() == true) {
             closure.push_back(i);
