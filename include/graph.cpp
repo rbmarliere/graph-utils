@@ -745,13 +745,16 @@ vector<Node*> Graph::getTransitiveClosureOf(Node* n, bool direct) {
     vector<Node*> closure;
 
     Graph* g;
+    Node* _n;
     if (direct == true) {
         g = this;
+        _n = n;
     } else {
         g = this->transpose();
+        _n = g->getNodeByValue(n->getValue());
     }
 
-    g->depthFirstSearch(n);
+    g->depthFirstSearch(_n);
 
     Node* i = g->getRoot();
     while (i != nullptr) {
