@@ -645,9 +645,9 @@ Graph* Graph::transpose() {
 
     Node* i = this->getRoot();
     while (i != nullptr) {
+        Node* n1 = gT->insertNode(i->getValue(), 0);
         Edge* e = i->getEdges();
         while (e != nullptr) {
-            Node* n1 = gT->insertNode(i->getValue(), 0);
             Node* n2 = gT->insertNode(e->getNode()->getValue(), 0);
             gT->insertEdge(n2, n1);
             e = e->getNext();
@@ -671,11 +671,11 @@ Node* Graph::getNodeByValue(int value) {
 }
 
 Graph* Graph::getMST_Prim() {
-
+    return 0;
 }
 
 Graph* Graph::getMST_Kruskal() {
-
+    return 0;
 }
 
 Graph* Graph::getMaxClique() {
@@ -720,7 +720,7 @@ Graph* Graph::getMaxClique() {
 }
 
 Graph* Graph::checkSubsetsBy(int factor) {
-
+    return 0;
 }
 
 vector<Edge*> Graph::getSortedEdges() {
