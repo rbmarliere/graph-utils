@@ -12,7 +12,7 @@ Edge::Edge(Node* n) {
     next = nullptr;
 }
 
-int Edge::getWeight() {
+int Edge::getWeight() const {
     return this->weight;
 }
 
@@ -32,8 +32,12 @@ Node* Edge::getNode() {
     return this->node;
 }
 
-bool Edge::operator > (Edge* &e2) {
-    return this->getWeight() > e2->getWeight();
+bool Edge::operator <(const Edge& e2) const {
+    return this->getWeight() < e2.getWeight();
+}
+
+bool edgePtrCmp(const Edge* e1, const Edge* e2) {
+    return *e1 < *e2;
 }
 
 Node::Node(int value, int degree) {
@@ -703,7 +707,7 @@ Graph* Graph::getMaxClique() {
         return initial;
     }
 
-    for (int i = highestDegree; i = lowestDegree; i--) {
+    for (int i = highestDegree; i == lowestDegree; i--) {
         int combination_factor = highestDegree - i;
         Graph* clique = initial->checkSubsetsBy(combination_factor);
 
@@ -732,5 +736,5 @@ void Graph::getSortedEdges(vector<Edge*> &edges) {
         i = i->getNextInGraph();
     }
 
-    std::sort(edges.begin(), edges.end(),greater<Edge*>());
+    sort(edges.begin(), edges.end(), edgePtrCmp);
 }

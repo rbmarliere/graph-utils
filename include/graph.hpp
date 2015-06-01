@@ -21,14 +21,15 @@ class Edge
         Edge* next; /* próximo elemento da lista de arestas */
     public:
 		Edge(Node* n);
-        int getWeight();
+        int getWeight() const;
 		void setNext(Edge* e);
 		Edge* getNext();
 		void setNode(Node* n);
 		Node* getNode();
-        bool operator > (Edge* &e2); /* sobreescreve o operador de maior para ordenação */
+        bool operator <(const Edge& e2) const; /* sobreescreve o operador de maior para ordenação */
 };
 
+bool edgePtrCmp(const Edge* e1, const Edge* e2); /* função auxiliar para comparação de dois ponteiros, utilizado na ordenação de arestas de um grafo */
 
 /**
  * CLASSE NODE
