@@ -71,10 +71,10 @@ class Manager
 		void exportGraph(char* path);
 
 		/**
-		 * função fundamental do programa que é responsável por ler um arquivo de entrada e criar um grafo na memória, através da biblioteca graph.hpp
+		 * função fundamental do programa que é responsável por ler um arquivo de entrada e criar um grafo (ou digrafo) na memória, através do header graph.hpp
 		 * @param path caminho para o arquivo de input, especificado pelo usuário via argumento ao programa
 		 */
-		void importGraph(char* path);
+		void importGraph(char* path, bool digraph);
 };
 
 #endif

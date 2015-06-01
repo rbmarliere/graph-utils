@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stack>
 #include "graph.hpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -9,6 +10,10 @@ Edge::Edge(Node* n) {
     weight = 1 + (rand() % 50);
     node = n;
     next = nullptr;
+}
+
+int Edge::getWeight() {
+    return this->weight;
 }
 
 void Edge::setNext(Edge* e) {
@@ -25,6 +30,10 @@ void Edge::setNode(Node* n) {
 
 Node* Edge::getNode() {
     return this->node;
+}
+
+bool Edge::operator > (Edge* &e2) {
+    return this->getWeight() > e2->getWeight();
 }
 
 Node::Node(int value, int degree) {
@@ -704,4 +713,24 @@ Graph* Graph::getMaxClique() {
     }
 
     return nullptr;
+}
+
+Graph* Graph::checkSubsetsBy(int factor) {
+
+}
+
+void Graph::getSortedEdges(vector<Edge*> &edges) {
+    edges.clear();
+
+    Node* i = this->getRoot();
+    while (i != nullptr) {
+        Edge* e = i->getEdges();
+        while (e != nullptr) {
+            edges.push_back(e);
+            e = e->getNext();
+        }
+        i = i->getNextInGraph();
+    }
+
+    std::sort(edges.begin(), edges.end(),greater<Edge*>());
 }

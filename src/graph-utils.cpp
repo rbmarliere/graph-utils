@@ -5,6 +5,11 @@
 
 using namespace std;
 
+void printHelp() {
+	cout << "usage: graph-utils -i <input file> -o <output file> <-d *>\n";
+	cout << "* -d for digraphs (optional)\n";
+}
+
 /**
  * Função principal do programa responsável por
  * fazer o parsing dos argumentos e chamar o Manager
@@ -19,26 +24,30 @@ int main(int argc, char* argv[])
 	// path para ambos os parametros (nome e caminho dos arquivos)
 	char* input = nullptr;
 	char* output = nullptr;
+	bool digraph = false;
 
 	// parser dos parametros
-	for (int i=1; i<argc; i++) {
-		if (i+1 != argc) {
-			if (strcmp(argv[i], "-i") == 0) {
-				input = argv[i+1];
-			} else if (strcmp(argv[i], "-o") == 0) {
-				output = argv[i+1];
-			}
+	for (int i = 1; i < argc; i++) {
+		if (strcmp(argv[i], "-i") == 0) {
+			input = argv[i+1];
+		} else if (strcmp(argv[i], "-o") == 0) {
+			output = argv[i+1];
+		} else if (strcmp(argv[i], "-d") == 0) {
+			digraph = true;
+		} else if (strcmp(argv[i], "-h") == 0) {
+			printHelp();
+			return 0;
 		}
 	}
 
 	if (argc < 5 || input == nullptr || output == nullptr) {
-		cout << "usage: graph-utils -i <input file> -o <output file>\n";
+		printHelp();
 		return 0;
 	}
 
 	try {
 		Manager manager; // objeto Manager responsável por processar os dados
-		manager.importGraph(input);
+		manager.importGraph(input, digraph);
 		manager.exportGraph(output);
 	} catch (string msg) {
 		cout << "error: " << msg;

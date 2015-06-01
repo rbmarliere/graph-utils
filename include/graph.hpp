@@ -1,6 +1,8 @@
 #ifndef GRAPH
 #define GRAPH
 
+#include <vector>
+
 // pré-declarações
 class Node;
 class Component;
@@ -14,15 +16,17 @@ class Graph;
 class Edge
 {
 	private:
-		int weight; /* peso da aresta (número aleatório entre 1 e 50)*/
+		int weight; /* peso da aresta (número aleatório entre 1 e 50) */
         Node* node; /* nó referenciado */
         Edge* next; /* próximo elemento da lista de arestas */
     public:
 		Edge(Node* n);
+        int getWeight();
 		void setNext(Edge* e);
 		Edge* getNext();
 		void setNode(Node* n);
 		Node* getNode();
+        bool operator > (Edge* &e2); /* sobreescreve o operador de maior para ordenação */
 };
 
 
@@ -130,8 +134,8 @@ class Graph
 		int getNumNodes();
 		void setNumEdges(int num);
 		int getNumEdges();
-		int Node* Graph::getHighestDegreeNode(); /* retorna o nó com maior grau do grafo */
-		int Node* Graph::getLowestDegreeNode(); /* retorna o nó com menor grau do grafo */
+		Node* getHighestDegreeNode(); /* retorna o nó com maior grau do grafo */
+		Node* getLowestDegreeNode(); /* retorna o nó com menor grau do grafo */
 		double getDegreeAverage(); /* retorna a média dos valores dos graus do grafo */
 		int getNumNodesByDegree(int degree); /* retorna a quantidade de nós com o grau @param degree*/
 		Node* insertNode(int value, int degree); /* insere nó alimentando o construtor da classe Node com os @params */
@@ -155,6 +159,8 @@ class Graph
 		Graph* getMST_Prim(); /* retorna a árvore geradora mínima usando o algoritmo de Prim */
 		Graph* getMST_Kruskal(); /* retorna a árvore geradora mínima usando o algoritmo de Kruskal */
 		Graph* getMaxClique(); /* retorna a clique máxima */
+        Graph* checkSubsetsBy(int factor); /* verifica subconjuntos de this removendo combinações de nós factor a factor, retornando um subgrafo completo ou nullptr */
+        void getSortedEdges(std::vector<Edge*> &edges); /* carrega um vetor ordenado de arestas, de forma crescente através dos pesos */
 };
 
 #endif

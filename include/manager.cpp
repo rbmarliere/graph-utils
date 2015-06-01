@@ -86,7 +86,7 @@ void Manager::printEachNodeInfo(ofstream &output) {
                 if (j == nullptr) {
                     break;
                 }
-                output << " " << j->getNode()->getValue();
+                output << " " << j->getNode()->getValue() << "(p=" << j->getWeight() << ")";
 
                 j = j->getNext();
             }
@@ -167,7 +167,7 @@ void Manager::exportGraph(char* path) {
     printGraphInfo(output);
     printNodeInfo(output);
     printEachNodeInfo(output);
-    if (this->graph->getComponents() != nullptr) {
+    if (this->graph->getComponents() != nullptr && this->graph->getComponents()->getNext() != nullptr) {
         printComponentsInfo(output);
     }
     printLine(output, '#');
@@ -179,7 +179,7 @@ void Manager::exportGraph(char* path) {
     output.close();
 }
 
-void Manager::importGraph(char* path) {
+void Manager::importGraph(char* path, bool digraph) {
     ifstream input (path);
     if (!input.is_open()) {
         std::string errMsg("error opening file \"");
@@ -204,6 +204,10 @@ void Manager::importGraph(char* path) {
             Node* n2 = graph->insertNode(v2, 0);
 
             graph->insertEdge(n1, n2);
+
+            if (digraph == false) {
+                graph->insertEdge(n2, n1);
+            }
         }
 
         i++;
