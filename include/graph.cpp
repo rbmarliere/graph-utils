@@ -6,8 +6,8 @@
 
 using namespace std;
 
-Edge::Edge(Node* n) {
-    weight = 1 + (rand() % 50);
+Edge::Edge(Node* n, int weight) {
+    this->weight = weight;
     node = n;
     next = nullptr;
 }
@@ -22,6 +22,14 @@ void Edge::setNext(Edge* e) {
 
 Edge* Edge::getNext() {
     return this->next;
+}
+
+void Edge::setParent(Node* n) {
+    this->parent = n;
+}
+
+Node* Edge::getParent() {
+    return this->parent;
 }
 
 void Edge::setNode(Node* n) {
@@ -88,14 +96,15 @@ Edge* Node::getEdges() {
     return this->edges;
 }
 
-void Node::setEdgeRoot(Node* n) {
-    Edge* e = new Edge(n);
+void Node::setEdgeRoot(Node* n, int weight) {
+    Edge* e = new Edge(n, weight);
+    e->setParent(this);
     this->edges = e;
 }
 
-void Node::insertEdge(Node* n) {
+void Node::insertEdge(Node* n, int weight) {
     if (edges == nullptr) {
-        this->setEdgeRoot(n);
+        this->setEdgeRoot(n, weight);
         degree++;
     } else {
         Edge* i = this->getEdges();
@@ -105,7 +114,8 @@ void Node::insertEdge(Node* n) {
             }
 
             if (i->getNext() == nullptr) {
-                Edge* e = new Edge(n);
+                Edge* e = new Edge(n, weight);
+                e->setParent(this);
                 i->setNext(e);
                 degree++;
                 break;
@@ -116,25 +126,32 @@ void Node::insertEdge(Node* n) {
     }
 }
 
-void Node::removeEdge(Node* n) {
+Edge* Node::removeEdge(Node* n) {
     if (edges != nullptr) {
         if (edges->getNode()->getValue() == n->getValue()) {
+            Edge* toBeRemoved = this->edges;
             this->edges = edges->getNext();
             degree--;
+            return toBeRemoved;
         } else {
             Edge* i = edges;
             while (i != nullptr) {
                 Edge* nxt = i->getNext();
 
                 if (nxt != nullptr && nxt->getNode()->getValue() == n->getValue()) {
+                    Edge* toBeRemoved = nxt;
                     i->setNext(nxt->getNext());
                     degree--;
+
+                    return toBeRemoved;
                 }
 
                 i = i->getNext();
             }
         }
     }
+
+    return nullptr;
 }
 
 bool Node::hasEdgeWith(Node* n) {
@@ -397,14 +414,16 @@ void Graph::removeNode(Node* n) {
     }
 }
 
-void Graph::insertEdge(Node* source, Node* dest) {
-    source->insertEdge(dest);
+void Graph::insertEdge(Node* source, Node* dest, int weight) {
+    source->insertEdge(dest, weight);
     num_edges++;
 }
 
-void Graph::removeEdge(Node* source, Node* dest) {
-    source->removeEdge(dest);
+Edge* Graph::removeEdge(Node* source, Node* dest) {
+    Edge* removed = source->removeEdge(dest);
     num_edges--;
+
+    return removed;
 }
 
 bool Graph::isRegularByDegree(int degree){
@@ -476,12 +495,21 @@ void Graph::depthFirstSearch(Node* searchRoot) {
 }
 
 bool Graph::isConnected() {
-    if (this->getComponents() != nullptr && this->getComponents()->getNext() != nullptr) {
-        // possui mais de uma componente conexa
-        return false;
-    } else {
-        return true;
+    this->depthFirstSearch(this->getRoot());
+
+    Graph* gT = this->transpose();
+    gT->depthFirstSearch(gT->getRoot());
+
+    Node* i = this->getRoot();
+    while (i != nullptr){
+        Node* n_in_gT = gT->getNodeByValue(i->getValue());
+        if (!i->wasVisited() && !n_in_gT->wasVisited()) {
+            return false;
+        }
+        i = i->getNextInGraph();
     }
+
+    return true;
 }
 
 void Graph::loadComponents() {
@@ -505,7 +533,7 @@ void Graph::loadComponents() {
                     Edge* e = gT_n->getEdges();
                     while (e != nullptr) {
                         Node* newNode2 = component->insertNode(e->getNode()->getValue(), 0);
-                        component->insertEdge(newNode2, newNode1);
+                        component->insertEdge(newNode2, newNode1, e->getWeight());
 
                         e = e->getNext();
                     }
@@ -517,7 +545,7 @@ void Graph::loadComponents() {
                     while (e != nullptr) {
                         if (e->getNode()->wasVisited() == false) {
                             Node* newNode2 = toBeChecked->insertNode(e->getNode()->getValue(), 0);
-                            toBeChecked->insertEdge(newNode2, newNode1);
+                            toBeChecked->insertEdge(newNode2, newNode1, e->getWeight());
                         }
 
                         e = e->getNext();
@@ -584,9 +612,9 @@ bool Graph::nodeIsReachable(Node* n1, Node* n2) {
 
 bool Graph::isBridge(Node* n1, Node* n2) {
     if (this->areAdjacent(n1, n2)) {
-        this->removeEdge(n1, n2);
+        Edge* backup = this->removeEdge(n1, n2);
         bool nodesStillConnected = this->nodesInSameComponent(n1, n2);
-        this->insertEdge(n1, n2);
+        this->insertEdge(n1, n2, backup->getWeight());
         if (nodesStillConnected) {
             return false;
         }
@@ -606,11 +634,11 @@ bool Graph::isCutVertex(Node* n) {
     Edge* e = n->getEdges();
     Edge* lastEdge = n->getLastEdge(); // grava ultima aresta para parar o loop a seguir
     while (e != nullptr) {
-        this->removeEdge(n, e->getNode());
+        Edge* backup = this->removeEdge(n, e->getNode());
 
         bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
 
-        this->insertEdge(n, e->getNode());
+        this->insertEdge(n, e->getNode(), backup->getWeight());
 
         if (!areInSameComponent) {
             returnValue = true;
@@ -649,7 +677,7 @@ Graph* Graph::transpose() {
         Edge* e = i->getEdges();
         while (e != nullptr) {
             Node* n2 = gT->insertNode(e->getNode()->getValue(), 0);
-            gT->insertEdge(n2, n1);
+            gT->insertEdge(n2, n1, e->getWeight());
             e = e->getNext();
         }
         i = i->getNextInGraph();
@@ -675,7 +703,28 @@ Graph* Graph::getMST_Prim() {
 }
 
 Graph* Graph::getMST_Kruskal() {
-    return 0;
+    vector<Edge*> edges = this->getSortedEdges();
+
+    // cria uma cópia de this sem arestas
+    Graph* g_copy = this->copy();
+    g_copy->removeAllEdges();
+    for (vector<Edge*>::iterator it = edges.begin(); it != edges.end(); it++) {
+        // insere aresta por aresta presente no grafo principal, de forma crescente
+        Node* n1 = g_copy->getNodeByValue((*it)->getParent()->getValue());
+        Node* n2 = g_copy->getNodeByValue((*it)->getNode()->getValue());
+        g_copy->insertEdge(n1, n2, (*it)->getWeight());
+
+        if (g_copy->hasCycle()) {
+            // se uma aresta gera ciclo ao ser inserida, deve ser removida
+            g_copy->removeEdge(n1, n2);
+        }
+
+        if (g_copy->isConnected()) {
+            break;
+        }
+    }
+
+    return g_copy;
 }
 
 Graph* Graph::getMaxClique() {
@@ -693,7 +742,7 @@ Graph* Graph::getMaxClique() {
             while (e != nullptr) {
                 if (e->getNode()->wasVisited() == true) {
                     Node* newNode2 = initial->insertNode(e->getNode()->getValue(), 0);
-                    initial->insertEdge(newNode1, newNode2);
+                    initial->insertEdge(newNode1, newNode2, e->getWeight());
                 }
 
                 e = e->getNext();
@@ -765,4 +814,64 @@ vector<Node*> Graph::getTransitiveClosureOf(Node* n, bool direct) {
     }
 
     return closure;
+}
+
+void Graph::removeAllEdges() {
+    Node* i = this->getRoot();
+    while (i != nullptr) {
+        Edge* e = i->getEdges();
+        while (e != nullptr) {
+            this->removeEdge(i, e->getNode());
+            e = e->getNext();
+        }
+        i = i->getNextInGraph();
+    }
+}
+
+Graph* Graph::copy() {
+    Graph* g_copy = new Graph();
+    Node* i = this->getRoot();
+    while (i != nullptr) {
+        Node* newNode1 = g_copy->insertNode(i->getValue(), 0);
+
+        Edge* e = i->getEdges();
+        while (e != nullptr) {
+            Node* newNode2 = g_copy->insertNode(e->getNode()->getValue(), 0);
+            g_copy->insertEdge(newNode1, newNode2, e->getWeight());
+
+            e = e->getNext();
+        }
+
+        i = i->getNextInGraph();
+    }
+
+    return g_copy;
+}
+
+bool Graph::hasCycle() {
+    // utiliza DFS, retornando verdadeiro quando encontra, numa aresta, um nó já visitado
+    this->flushNodes();
+
+    stack<Node*> nodesInProgress;
+    nodesInProgress.push(this->getRoot());
+
+    while (!nodesInProgress.empty()) {
+        Node* top = nodesInProgress.top();
+        nodesInProgress.pop();
+
+        top->visit();
+
+        Edge* edge = top->getEdges();
+        while (edge != nullptr) {
+            if (edge->getNode()->wasVisited()) {
+                return true;
+            } else {
+                nodesInProgress.push(edge->getNode());
+            }
+
+            edge = edge->getNext();
+        }
+    }
+
+    return false;
 }

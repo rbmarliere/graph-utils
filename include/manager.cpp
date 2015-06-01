@@ -30,7 +30,7 @@ void Manager::printGraphInfo(ofstream &output) {
     output << "INFORMAÇÕES DO GRAFO\n\n";
     output << "Número de nós: " << graph->getNumNodes() << "\n";
     output << "Número de arestas: " << graph->getNumEdges() << "\n";
-    output << "É conexo? " << graph->isConnected() << "\n";
+    output << "É conexo? " <<  graph->isConnected() << "\n";
     output << "É completo? " << graph->isComplete() << "\n";
 
     output << "É regular? ";
@@ -81,13 +81,13 @@ void Manager::printEachNodeInfo(ofstream &output) {
 
         output << "Fecho Transitivo Indireto:";
         vector<Node*> indirectClosure = graph->getTransitiveClosureOf(i, false);
-        for(vector<Node*>::iterator it = indirectClosure.begin(); it != indirectClosure.end(); it++) {
+        for (vector<Node*>::iterator it = indirectClosure.begin(); it != indirectClosure.end(); it++) {
             output << " " << (*it)->getValue();
         }
 
         output << "\nFecho Transitivo Direto:";
         vector<Node*> directClosure = graph->getTransitiveClosureOf(i, true);
-        for(vector<Node*>::iterator it = directClosure.begin(); it != directClosure.end(); it++) {
+        for (vector<Node*>::iterator it = directClosure.begin(); it != directClosure.end(); it++) {
             output << " " << (*it)->getValue();
         }
         output << "\n";
@@ -180,6 +180,28 @@ void Manager::exportGraph(char* path) {
     printGraphInfo(output);
     printNodeInfo(output);
     printEachNodeInfo(output);
+    
+    Graph* graphBackup = this->graph; // guarda "singleton"
+    
+    //        printLine(output, '.');
+    //        output << "Árvore Geradora Mínima via Prim: ";
+    //        printLine(output, '.');
+    //        this->graph = graphBackup->getMST_Prim();
+    //        printGraphInfo(output);
+    //        printNodeInfo(output);
+    //        printEachNodeInfo(output);
+    
+    printLine(output, '.');
+    output << "Árvore Geradora Mínima (via Kruskal):";
+    printLine(output, '.');
+    this->graph = graphBackup->getMST_Kruskal();
+    printGraphInfo(output);
+    printNodeInfo(output);
+    printEachNodeInfo(output);
+    printLine(output, '.');
+    
+    this->graph = graphBackup;
+    
     if (this->graph->getComponents() != nullptr && this->graph->getComponents()->getNext() != nullptr) {
         printComponentsInfo(output);
     }
@@ -216,10 +238,10 @@ void Manager::importGraph(char* path, bool digraph) {
             Node* n1 = graph->insertNode(v1, 0);
             Node* n2 = graph->insertNode(v2, 0);
 
-            graph->insertEdge(n1, n2);
+            graph->insertEdge(n1, n2, 1 + (rand() % 50));
 
             if (digraph == false) {
-                graph->insertEdge(n2, n1);
+                graph->insertEdge(n2, n1, 1 + (rand() % 50));
             }
         }
 

@@ -18,12 +18,15 @@ class Edge
 	private:
 		int weight; /* peso da aresta (número aleatório entre 1 e 50) */
         Node* node; /* nó referenciado */
+        Node* parent; /* endereço para o nó que possui esta aresta (o nó em questão tem aresta com this->node) */
         Edge* next; /* próximo elemento da lista de arestas */
     public:
-		Edge(Node* n);
+		Edge(Node* n, int weight);
         int getWeight() const;
 		void setNext(Edge* e);
 		Edge* getNext();
+		void setParent(Node* n);
+		Node* getParent();
 		void setNode(Node* n);
 		Node* getNode();
         bool operator <(const Edge& e2) const; /* sobreescreve o operador de maior para ordenação */
@@ -76,14 +79,14 @@ class Node
          * referencia a primeira aresta do nó, ou seja, determina n quando atributo edges = nullptr
          * @param n nó que será a primeira aresta da lista
          */
-		void setEdgeRoot(Node* n);
+		void setEdgeRoot(Node* n, int weight);
 
         /**
          * anexa ao final da lista encadeada de arestas do nó self o nó @param n
          * @param n próximo nó da lista de arestas
          */
-		void insertEdge(Node* n);
-		void removeEdge(Node* n);
+		void insertEdge(Node* n, int weight);
+		Edge* removeEdge(Node* n); /* retorna a aresta removida */
 
         /**
          * verifica se o nó self possui aresta com @param n
@@ -141,8 +144,8 @@ class Graph
 		int getNumNodesByDegree(int degree); /* retorna a quantidade de nós com o grau @param degree*/
 		Node* insertNode(int value, int degree); /* insere nó alimentando o construtor da classe Node com os @params */
 		void removeNode(Node* n);
-		void insertEdge(Node* source, Node* dest); /* insere no grafo a aresta source -> dest */
-		void removeEdge(Node* source, Node* dest);
+		void insertEdge(Node* source, Node* dest, int weight); /* insere no grafo a aresta source -> dest */
+		Edge* removeEdge(Node* source, Node* dest); /* remove a aresta entre source e dest, retornando-a */
 		bool isRegularByDegree(int degree); /* retorna verdadeiro se o grafo é 'degree'-regular */
 		int isRegular(); /* verifica, para cada grau i entre 0 e maxDegree (de forma decremental), se o grafo é i-regular. retorna i na primeira ocorrência */
 		bool isComplete(); /* verifica se o grafo é completo */
@@ -163,6 +166,9 @@ class Graph
         Graph* checkSubsetsBy(int factor); /* verifica subconjuntos de this removendo combinações de nós factor a factor, retornando um subgrafo completo ou nullptr */
         std::vector<Edge*> getSortedEdges(); /* carrega um vetor ordenado de arestas, de forma crescente através dos pesos */
         std::vector<Node*> getTransitiveClosureOf(Node* n, bool direct); /* retorna o fecho transitivo (direto ou indireto, a depender do @param direct) do nó @param n */
+        void removeAllEdges(); /* remove todas as arestas de todos os nós de um grafo */
+        Graph* copy(); /* copia this e retorna */
+        bool hasCycle(); /* verifica se o grafo possui ciclo, retornando true no primeiro ciclo encontrado */
 };
 
 #endif
