@@ -79,6 +79,19 @@ void Manager::printEachNodeInfo(ofstream &output) {
         output << "Grau: " << i->getDegree() << "\n";
         output << "É ponto de articulação? " << graph->isCutVertex(i) << "\n";
 
+        output << "Fecho Transitivo Indireto:";
+        vector<Node*> indirectClosure = graph->getTransitiveClosureOf(i, false);
+        for(vector<Node*>::iterator it = indirectClosure.begin(); it != indirectClosure.end(); it++) {
+            output << " " << (*it)->getValue();
+        }
+
+        output << "\nFecho Transitivo Direto:";
+        vector<Node*> directClosure = graph->getTransitiveClosureOf(i, true);
+        for(vector<Node*>::iterator it = directClosure.begin(); it != directClosure.end(); it++) {
+            output << " " << (*it)->getValue();
+        }
+        output << "\n";
+
         Edge* j = i->getEdges();
         if (j != nullptr) {
             output << "Possui arestas com:";

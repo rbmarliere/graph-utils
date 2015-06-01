@@ -723,8 +723,8 @@ Graph* Graph::checkSubsetsBy(int factor) {
 
 }
 
-void Graph::getSortedEdges(vector<Edge*> &edges) {
-    edges.clear();
+vector<Edge*> Graph::getSortedEdges() {
+    vector<Edge*> edges;
 
     Node* i = this->getRoot();
     while (i != nullptr) {
@@ -737,4 +737,24 @@ void Graph::getSortedEdges(vector<Edge*> &edges) {
     }
 
     sort(edges.begin(), edges.end(), edgePtrCmp);
+
+    return edges;
+}
+
+vector<Node*> Graph::getTransitiveClosureOf(Node* n, bool direct) {
+    vector<Node*> closure;
+
+    Graph* g = direct ? this : this->transpose();
+
+    g->depthFirstSearch(this->getRoot());
+
+    Node* i = this->getRoot();
+    while (i != nullptr) {
+        if (i->wasVisited() == true) {
+            closure.push_back(i);
+        }
+        i = i->getNextInGraph();
+    }
+
+    return closure;
 }
