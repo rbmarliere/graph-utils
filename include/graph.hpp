@@ -131,6 +131,7 @@ class Graph
 		void setNumEdges(int num);
 		int getNumEdges();
 		int Node* Graph::getHighestDegreeNode(); /* retorna o nó com maior grau do grafo */
+		int Node* Graph::getLowestDegreeNode(); /* retorna o nó com menor grau do grafo */
 		double getDegreeAverage(); /* retorna a média dos valores dos graus do grafo */
 		int getNumNodesByDegree(int degree); /* retorna a quantidade de nós com o grau @param degree*/
 		Node* insertNode(int value, int degree); /* insere nó alimentando o construtor da classe Node com os @params */

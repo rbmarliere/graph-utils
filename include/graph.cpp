@@ -282,6 +282,25 @@ Node* Graph::getHighestDegreeNode() {
     return i;
 }
 
+Node* Graph::getLowestDegreeNode() {
+    Node* i = root;
+    int min = 0;
+    while (true) {
+        int d = i->getDegree();
+        if (d < min) {
+            min = d;
+        }
+
+        if (i->getNextInGraph() == nullptr) {
+            break;
+        }
+
+        i = i->getNextInGraph();
+    }
+
+    return i;
+}
+
 double Graph::getDegreeAverage() {
     Node* i = root;
     int sumDegrees = 0;
@@ -649,7 +668,7 @@ Graph* Graph::getMST_Kruskal() {
 Graph* Graph::getMaxClique() {
     Node* i = this->getHighestDegreeNode(); // pega nó de maior grau
     int highestDegree = i->getDegree();
-    int highestDegree_val = i->getValue(); // guarda seu valor para posterior identificação (pois não pode ser removido das combinações)
+    int lowestDegree = this->getLowestDegreeNode()->getDegree();
     this->depthFirstSearch(i); // visita todos os nós alcançáveis a partir dele
 
     Graph* initial = new Graph(); // monta o grafo correspondente
@@ -675,7 +694,7 @@ Graph* Graph::getMaxClique() {
         return initial;
     }
 
-    for (int i = highestDegree; i = 0; i--) {
+    for (int i = highestDegree; i = lowestDegree; i--) {
         int combination_factor = highestDegree - i;
         Graph* clique = initial->checkSubsetsBy(combination_factor);
 
