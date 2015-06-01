@@ -14,6 +14,7 @@ class Graph;
 class Edge
 {
 	private:
+		int weight; /* peso da aresta (número aleatório entre 1 e 50)*/
         Node* node; /* nó referenciado */
         Edge* next; /* próximo elemento da lista de arestas */
     public:
@@ -144,11 +145,14 @@ class Graph
 		bool isConnected(); /* verifica se o grafo é conexo */
 		void loadComponents(); /* algoritmo recursivo que utiliza a funcao depthFirstSearch() para montar um grafo com os nós que foram visitados e acrescentá-lo na lista das componentes do grafo, sendo chamado novamente para o grafo dos nós não visitados */
 		bool nodesInSameComponent(Node* n1, Node* n2); /* verifica se os @params estão na mesma componente conexa */
+		bool nodeIsReachable(Node* n1, Node* n2); /* verifica se existe caminho de n1 para n2 */
 		bool isBridge(Node* n1, Node* n2); /* verifica se a aresta representada por @params é ponte */
 		bool isCutVertex(Node* n); /* verifica se @param é nó de articulação */
 		void flushNodes(); /* marca todos os nós como não visitados */
 		Graph* transpose(); /* retorna o grafo transposto (todas as arestas são invertidas) */
 		Node* getNodeByValue(int value); /* retorna o nó cujo valor é @param value */
+		Graph* getMST_Prim(); /* retorna a árvore geradora mínima usando o algoritmo de Prim */
+		Graph* getMST_Kruskal(); /* retorna a árvore geradora mínima usando o algoritmo de Kruskal */
 };
 
 #endif

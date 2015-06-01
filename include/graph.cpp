@@ -6,6 +6,7 @@
 using namespace std;
 
 Edge::Edge(Node* n) {
+    weight = 1 + (rand() % 50);
     node = n;
     next = nullptr;
 }
@@ -142,7 +143,7 @@ bool Node::hasEdgeWith(Node* n) {
 
 Edge* Node::getLastEdge() {
     Edge* i = this->getEdges();
-    
+
     if (i != nullptr) {
         while (i->getNext() != nullptr) {
             i = i->getNext();
@@ -403,8 +404,8 @@ bool Graph::isComplete() {
     Node* n = root;
     int i = 0;
 
-    while(n!= nullptr){
-        i = i + n->getDegree();
+    while (n != nullptr) {
+        i += n->getDegree();
         n = n->getNextInGraph();
     }
 
@@ -443,17 +444,12 @@ void Graph::depthFirstSearch(Node* searchRoot) {
 }
 
 bool Graph::isConnected() {
-    this->depthFirstSearch(this->getRoot());
-
-    Node* i = this->getRoot();
-    while (i != nullptr){
-        if (!i->wasVisited()) {
-            return false;
-        }
-        i = i->getNextInGraph();
+    if (this->getComponents() != nullptr && this->getComponents()->getNext() != nullptr) {
+        // possui mais de uma componente conexa
+        return false;
+    } else {
+        return true;
     }
-
-    return true;
 }
 
 void Graph::loadComponents() {
@@ -522,6 +518,10 @@ void Graph::loadComponents() {
 }
 
 bool Graph::nodesInSameComponent(Node* n1, Node* n2) {
+    return this->nodeIsReachable(n1, n2) && this->nodeIsReachable(n2, n1);
+}
+
+bool Graph::nodeIsReachable(Node* n1, Node* n2) {
     this->flushNodes();
 
     stack<Node*> nodesInProgress;
@@ -576,7 +576,7 @@ bool Graph::isCutVertex(Node* n) {
     while (e != nullptr) {
         this->removeEdge(n, e->getNode());
 
-        bool areInSameComponent = this->nodesInSameComponent(n, e->getNode()) && this->nodesInSameComponent(e->getNode(), n); // ?
+        bool areInSameComponent = this->nodesInSameComponent(n, e->getNode());
 
         this->insertEdge(n, e->getNode());
 
@@ -636,4 +636,12 @@ Node* Graph::getNodeByValue(int value) {
     }
 
     return nullptr;
+}
+
+Graph* Graph::getMST_Prim() {
+
+}
+
+Graph* Graph::getMST_Kruskal() {
+
 }
