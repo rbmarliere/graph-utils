@@ -792,50 +792,55 @@ Graph* Graph::getMST_Kruskal() {
     return g_copy;
 }
 
-Graph* Graph::getMaxClique() {
-    Node* i = this->getHighestDegreeNode(); // pega nó de maior grau
-    int highestDegree = i->getDegree();
-    int lowestDegree = this->getLowestDegreeNode()->getDegree();
-    this->depthFirstSearch(i); // visita todos os nós alcançáveis a partir dele
+// Graph* Graph::getMaxClique() {
+//     Node* i = this->getHighestDegreeNode(); // pega nó de maior grau
+//     int highestDegree = i->getDegree();
+//     int lowestDegree = this->getLowestDegreeNode()->getDegree();
+//     this->depthFirstSearch(i); // visita todos os nós alcançáveis a partir dele
 
-    Graph* initial = new Graph(this->isDigraph()); // monta o grafo correspondente
-    while (i != nullptr) {
-        if (i->wasVisited() == true) {
-            Node* newNode1 = initial->insertNode(i->getValue(), 0);
+//     Graph* initial = new Graph(this->isDigraph()); // monta o grafo correspondente
+//     while (i != nullptr) {
+//         if (i->wasVisited() == true) {
+//             Node* newNode1 = initial->insertNode(i->getValue(), 0);
 
-            Edge* e = i->getEdges();
-            while (e != nullptr) {
-                if (e->getNode()->wasVisited() == true) {
-                    Node* newNode2 = initial->insertNode(e->getNode()->getValue(), 0);
-                    initial->insertEdge(newNode1, newNode2, e->getWeight());
-                }
+//             Edge* e = i->getEdges();
+//             while (e != nullptr) {
+//                 if (e->getNode()->wasVisited() == true) {
+//                     Node* newNode2 = initial->insertNode(e->getNode()->getValue(), 0);
+//                     initial->insertEdge(newNode1, newNode2, e->getWeight());
+//                 }
 
-                e = e->getNext();
-            }
-        }
+//                 e = e->getNext();
+//             }
+//         }
 
-        i = i->getNextInGraph();
-    }
+//         i = i->getNextInGraph();
+//     }
 
-    if (initial->isComplete()) {
-        return initial;
-    }
+//     if (initial->isComplete()) {
+//         return initial;
+//     }
 
-    for (int i = highestDegree; i == lowestDegree; i--) {
-        int combination_factor = highestDegree - i;
-        Graph* clique = initial->checkSubsetsBy(combination_factor);
+//     for (int i = highestDegree; i == lowestDegree; i--) {
+//         int combination_factor = highestDegree - i;
+//         Graph* clique = initial->getSubsets(combination_factor);
 
-        if (clique != nullptr) {
-            return clique;
-        }
-    }
+//         if (clique != nullptr) {
+//             return clique;
+//         }
+//     }
 
-    return nullptr;
-}
+//     return nullptr;
+// }
 
-Graph* Graph::checkSubsetsBy(int factor) {
-    return 0;
-}
+// Graph* Graph::getSubsets() {
+//     Node* i = this->getRoot();
+//     while (i != nullptr) {
+//         this->removeNode(i);
+//         this->getSubsets();
+//         this->insertNode(n);
+//     }
+// }
 
 vector<Edge*> Graph::getSortedEdges() {
     vector<Edge*> edges;

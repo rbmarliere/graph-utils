@@ -1,6 +1,4 @@
-#################################
-##########APRESENTAÇÃO###########
-#################################
+	graph-utils v0.3
 
 graph-utils é uma ferramenta simples que se propõe a analisar um grafo
 lido a partir de um arquivo texto que possua a seguinte sintaxe:
@@ -25,28 +23,15 @@ com o seguinte formato:
 
 * quando houver.
 
-#################################
-##########COMO UTILIZAR##########
-#################################
 
-para compilar, é necessário um compilador C++.
-em sistemas unix:
-$ pwd
-/path/to/graph-utils
-$ ls
-Makefile README src/
-$ make
+	utilização
 
-a ferramenta necessita de dois parâmetros:
+utilize o Makefile para compilar!
+
+	-h imprime ajuda
 	-i <<ARQUIVO PARA LEITURA DO GRAFO>>
 	-o <<ARQUIVO PARA GRAVAR A ANÁLISE>>
+	-d faz o programa montar um digrafo
 
-exemplo:
+exemplo de utilização:
 $ ./graph-utils -i input.txt -o output.txt
-
-
-
-
-
-autor: Ricardo de Barros Marliere
-

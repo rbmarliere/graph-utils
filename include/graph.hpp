@@ -169,8 +169,8 @@ class Graph
 		Node* getNodeByValue(int value); /* retorna o nó cujo valor é @param value */
 		Graph* getMST_Prim(); /* retorna a árvore geradora mínima usando o algoritmo de Prim */
 		Graph* getMST_Kruskal(); /* retorna a árvore geradora mínima usando o algoritmo de Kruskal */
-		Graph* getMaxClique(); /* retorna a clique máxima */
-        Graph* checkSubsetsBy(int factor); /* verifica subconjuntos de this removendo combinações de nós factor a factor, retornando um subgrafo completo ou nullptr */
+		// Graph* getMaxClique(); /* retorna a clique máxima */
+        // Graph* checkSubsetsBy(int factor); /* verifica subconjuntos de this removendo combinações de nós factor a factor, retornando um subgrafo completo ou nullptr */
         std::vector<Edge*> getSortedEdges(); /* carrega um vetor ordenado de arestas, de forma crescente através dos pesos */
         std::vector<Node*> getTransitiveClosureOf(Node* n, bool direct); /* retorna o fecho transitivo (direto ou indireto, a depender do @param direct) do nó @param n */
         void removeAllEdges(); /* remove todas as arestas de todos os nós de um grafo */

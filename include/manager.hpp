@@ -1,6 +1,6 @@
 #ifndef MANAGER
 #define MANAGER
-#define VERSION 0.2 /* versão do programa */
+#define VERSION 0.3 /* versão do programa */
 #include "graph.hpp"
 
 /**
