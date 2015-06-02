@@ -731,35 +731,37 @@ Node* Graph::getNodeByValue(int value) {
 
 Graph* Graph::getMST_Prim() {
     Graph* mst = new Graph(this->isDigraph());
-    this->flushNodes();
+
+    vector<Node*> nodes;
     Node* i = this->getRoot();
     while (i != nullptr) {
-        i->visit();
+        nodes.push_back(i);
+        i = i->getNextInGraph();
+    }
 
-        Node* n1 = mst->insertNode(i->getValue(), 0); // insere o nó na solução
+    for (vector<Node*>::iterator it = nodes.begin(); it < nodes.end(); it++) {
+        Node* n1 = mst->insertNode((*it)->getValue(), 0);
 
-        Edge* e = i->getEdges();
-        int weight = 0;
         Edge* minWeightEdge = nullptr;
-        while (e != nullptr) {
-            if (!e->getNode()->wasVisited()) { // analisa apenas arestas cujo nós não foram visitados
-                if (this->areAdjacent(e->getNode(), i)) { // verifica se existe aresta inversa!
-                    if (weight == 0 || e->getWeight() < weight) {
-                        weight = e->getWeight();
+        int minWeight = 0;
+        Node* i = mst->getRoot();
+        while (i != nullptr) {
+            Node* this_i = this->getNodeByValue(i->getValue());
+            Edge* e = this_i->getEdges();
+            while (e != nullptr) {
+                if (e->getDirection() == true) {
+                    if (minWeight == 0 || e->getWeight() < minWeight) {
+                        minWeight = e->getWeight();
                         minWeightEdge = e;
                     }
                 }
+                e = e->getNext();
             }
-            e = e->getNext();
+            i = this_i->getNextInGraph();
         }
 
-        if (minWeightEdge != nullptr) {
-            Node* n2 = mst->insertNode(minWeightEdge->getNode()->getValue(), 0);
-            mst->insertEdge(n1, n2, minWeightEdge->getWeight());
-            i = minWeightEdge->getNode();
-        } else {
-            i = nullptr;
-        }
+        Node* n2 = mst->insertNode(minWeightEdge->getNode()->getValue(), 0);
+        mst->insertEdge(n1, n2, minWeightEdge->getWeight());
     }
 
     return mst;
