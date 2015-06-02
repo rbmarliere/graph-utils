@@ -731,25 +731,18 @@ Node* Graph::getNodeByValue(int value) {
 
 Graph* Graph::getMST_Prim() {
     Graph* mst = new Graph(this->isDigraph());
-
-    vector<Node*> nodes;
     Node* i = this->getRoot();
     while (i != nullptr) {
-        nodes.push_back(i);
-        i = i->getNextInGraph();
-    }
-
-    for (vector<Node*>::iterator it = nodes.begin(); it < nodes.end(); it++) {
-        Node* n1 = mst->insertNode((*it)->getValue(), 0);
+        Node* newNode = mst->insertNode(i->getValue(), 0);
 
         Edge* minWeightEdge = nullptr;
         int minWeight = 0;
-        Node* i = mst->getRoot();
-        while (i != nullptr) {
-            Node* this_i = this->getNodeByValue(i->getValue());
+        Node* mst_i = mst->getRoot();
+        while (mst_i != nullptr) {
+            Node* this_i = this->getNodeByValue(mst_i->getValue());
             Edge* e = this_i->getEdges();
             while (e != nullptr) {
-                if (e->getDirection() == true) {
+                if (mst->getNodeByValue(e->getNode()->getValue()) == nullptr) { // verifica se o nó da outra ponta da aresta não está na solução
                     if (minWeight == 0 || e->getWeight() < minWeight) {
                         minWeight = e->getWeight();
                         minWeightEdge = e;
@@ -757,11 +750,16 @@ Graph* Graph::getMST_Prim() {
                 }
                 e = e->getNext();
             }
-            i = this_i->getNextInGraph();
+            mst_i = mst_i->getNextInGraph();
         }
 
-        Node* n2 = mst->insertNode(minWeightEdge->getNode()->getValue(), 0);
-        mst->insertEdge(n1, n2, minWeightEdge->getWeight());
+        if (minWeightEdge != nullptr) {
+            Node* n1 = mst->insertNode(minWeightEdge->getParent()->getValue(), 0);
+            Node* n2 = mst->insertNode(minWeightEdge->getNode()->getValue(), 0);
+            mst->insertEdge(n1, n2, minWeightEdge->getWeight());
+        }
+
+        i = i->getNextInGraph();
     }
 
     return mst;
