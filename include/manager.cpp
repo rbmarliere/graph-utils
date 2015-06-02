@@ -32,6 +32,7 @@ void Manager::printGraphInfo(ofstream &output) {
     output << "Número de arestas: " << graph->getNumEdges() << "\n";
     output << "É conexo? " <<  graph->isConnected() << "\n";
     output << "É completo? " << graph->isComplete() << "\n";
+    output << "É digrafo? " << graph->isDigraph() << "\n";
 
     output << "É regular? ";
     int r = graph->isRegular();
@@ -180,28 +181,28 @@ void Manager::exportGraph(char* path) {
     printGraphInfo(output);
     printNodeInfo(output);
     printEachNodeInfo(output);
-    
+
     Graph* graphBackup = this->graph; // guarda "singleton"
-    
-    //        printLine(output, '.');
-    //        output << "Árvore Geradora Mínima via Prim: ";
-    //        printLine(output, '.');
-    //        this->graph = graphBackup->getMST_Prim();
-    //        printGraphInfo(output);
-    //        printNodeInfo(output);
-    //        printEachNodeInfo(output);
-    
+
     printLine(output, '.');
-    output << "Árvore Geradora Mínima (via Kruskal):";
+    output << "Árvore Geradora Mínima (via Prim)";
+    printLine(output, '.');
+    this->graph = graphBackup->getMST_Prim();
+    printGraphInfo(output);
+    printNodeInfo(output);
+    printEachNodeInfo(output);
+
+    printLine(output, '.');
+    output << "Árvore Geradora Mínima (via Kruskal)";
     printLine(output, '.');
     this->graph = graphBackup->getMST_Kruskal();
     printGraphInfo(output);
     printNodeInfo(output);
     printEachNodeInfo(output);
     printLine(output, '.');
-    
+
     this->graph = graphBackup;
-    
+
     if (this->graph->getComponents() != nullptr && this->graph->getComponents()->getNext() != nullptr) {
         printComponentsInfo(output);
     }
@@ -223,7 +224,7 @@ void Manager::importGraph(char* path, bool digraph) {
 
     cout << "importing graph from ";
 
-    Graph* graph = new Graph();
+    Graph* graph = new Graph(digraph);
     int v1 = 0, v2 = 0, i = 0;
     int lines = this->countLines(path);
     cout << path << " (" << lines << " lines): \n";
@@ -239,10 +240,6 @@ void Manager::importGraph(char* path, bool digraph) {
             Node* n2 = graph->insertNode(v2, 0);
 
             graph->insertEdge(n1, n2, 1 + (rand() % 50));
-
-            if (digraph == false) {
-                graph->insertEdge(n2, n1, 1 + (rand() % 50));
-            }
         }
 
         i++;

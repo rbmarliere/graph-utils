@@ -6,10 +6,11 @@
 
 using namespace std;
 
-Edge::Edge(Node* n, int weight) {
+Edge::Edge(Node* n, int weight, bool direction) {
+    this->direction = direction;
     this->weight = weight;
-    node = n;
-    next = nullptr;
+    this->node = n;
+    this->next = nullptr;
 }
 
 int Edge::getWeight() const {
@@ -38,6 +39,14 @@ void Edge::setNode(Node* n) {
 
 Node* Edge::getNode() {
     return this->node;
+}
+
+void Edge::setDirection(bool d) {
+    this->direction = d;
+}
+
+bool Edge::getDirection() {
+    return this->direction;
 }
 
 bool Edge::operator <(const Edge& e2) const {
@@ -96,16 +105,17 @@ Edge* Node::getEdges() {
     return this->edges;
 }
 
-void Node::setEdgeRoot(Node* n, int weight) {
-    Edge* e = new Edge(n, weight);
+void Node::setEdgeRoot(Node* n, int weight, bool direction) {
+    Edge* e = new Edge(n, weight, direction);
     e->setParent(this);
     this->edges = e;
 }
 
-void Node::insertEdge(Node* n, int weight) {
+bool Node::insertEdge(Node* n, int weight, bool direction) {
     if (edges == nullptr) {
-        this->setEdgeRoot(n, weight);
+        this->setEdgeRoot(n, weight, direction);
         degree++;
+        return true;
     } else {
         Edge* i = this->getEdges();
         while (true) {
@@ -114,16 +124,18 @@ void Node::insertEdge(Node* n, int weight) {
             }
 
             if (i->getNext() == nullptr) {
-                Edge* e = new Edge(n, weight);
+                Edge* e = new Edge(n, weight, direction);
                 e->setParent(this);
                 i->setNext(e);
                 degree++;
-                break;
+                return true;
             }
 
             i = i->getNext();
         }
     }
+
+    return false;
 }
 
 Edge* Node::removeEdge(Node* n) {
@@ -206,7 +218,8 @@ Component* Component::getNext() {
     return this->next;
 }
 
-Graph::Graph() {
+Graph::Graph(bool isDigraph) {
+    digraph = isDigraph;
     root = nullptr;
     components = nullptr;
     num_nodes = num_edges = 0;
@@ -291,6 +304,14 @@ void Graph::setNumEdges(int num) {
 
 int Graph::getNumEdges() {
     return num_edges;
+}
+
+void Graph::setDigraph(bool flag) {
+    this->digraph = flag;
+}
+
+bool Graph::isDigraph() {
+    return this->digraph;
 }
 
 Node* Graph::getHighestDegreeNode() {
@@ -415,13 +436,23 @@ void Graph::removeNode(Node* n) {
 }
 
 void Graph::insertEdge(Node* source, Node* dest, int weight) {
-    source->insertEdge(dest, weight);
-    num_edges++;
+    bool inserted = source->insertEdge(dest, weight, true);
+    if (!this->isDigraph()) {
+        dest->insertEdge(source, weight, false);
+    }
+    if (inserted == true) {
+        num_edges++;
+    }
 }
 
 Edge* Graph::removeEdge(Node* source, Node* dest) {
     Edge* removed = source->removeEdge(dest);
-    num_edges--;
+    if (!this->isDigraph()) {
+        dest->removeEdge(source);
+    }
+    if (removed != nullptr) {
+        num_edges--;
+    }
 
     return removed;
 }
@@ -514,13 +545,13 @@ bool Graph::isConnected() {
 
 void Graph::loadComponents() {
     this->depthFirstSearch(this->getRoot());
-
-    Graph* toBeChecked = new Graph();
+    bool flagDigraph = this->isDigraph();
+    Graph* toBeChecked = new Graph(flagDigraph);
     Graph* gT = this->transpose();
     Node* n = this->getRoot();
     while (n != nullptr) {
         if (n->wasVisited() == true) {
-            Graph* component = new Graph();
+            Graph* component = new Graph(flagDigraph);
             Node* n_in_gT = gT->getNodeByValue(n->getValue());
             gT->depthFirstSearch(n_in_gT);
 
@@ -669,7 +700,7 @@ void Graph::flushNodes() {
 }
 
 Graph* Graph::transpose() {
-    Graph* gT = new Graph();
+    Graph* gT = new Graph(this->isDigraph());
 
     Node* i = this->getRoot();
     while (i != nullptr) {
@@ -699,7 +730,39 @@ Node* Graph::getNodeByValue(int value) {
 }
 
 Graph* Graph::getMST_Prim() {
-    return 0;
+    Graph* mst = new Graph(this->isDigraph());
+    this->flushNodes();
+    Node* i = this->getRoot();
+    while (i != nullptr) {
+        i->visit();
+
+        Node* n1 = mst->insertNode(i->getValue(), 0); // insere o nó na solução
+
+        Edge* e = i->getEdges();
+        int weight = 0;
+        Edge* minWeightEdge = nullptr;
+        while (e != nullptr) {
+            if (!e->getNode()->wasVisited()) { // analisa apenas arestas cujo nós não foram visitados
+                if (this->areAdjacent(e->getNode(), i)) { // verifica se existe aresta inversa!
+                    if (weight == 0 || e->getWeight() < weight) {
+                        weight = e->getWeight();
+                        minWeightEdge = e;
+                    }
+                }
+            }
+            e = e->getNext();
+        }
+
+        if (minWeightEdge != nullptr) {
+            Node* n2 = mst->insertNode(minWeightEdge->getNode()->getValue(), 0);
+            mst->insertEdge(n1, n2, minWeightEdge->getWeight());
+            i = minWeightEdge->getNode();
+        } else {
+            i = nullptr;
+        }
+    }
+
+    return mst;
 }
 
 Graph* Graph::getMST_Kruskal() {
@@ -735,7 +798,7 @@ Graph* Graph::getMaxClique() {
     int lowestDegree = this->getLowestDegreeNode()->getDegree();
     this->depthFirstSearch(i); // visita todos os nós alcançáveis a partir dele
 
-    Graph* initial = new Graph(); // monta o grafo correspondente
+    Graph* initial = new Graph(this->isDigraph()); // monta o grafo correspondente
     while (i != nullptr) {
         if (i->wasVisited() == true) {
             Node* newNode1 = initial->insertNode(i->getValue(), 0);
@@ -789,6 +852,19 @@ vector<Edge*> Graph::getSortedEdges() {
 
     sort(edges.begin(), edges.end(), edgePtrCmp);
 
+    if (!this->isDigraph()) {
+        Edge* lastEdge = nullptr;
+        for (vector<Edge*>::iterator it = edges.begin(); it != edges.end();) {
+            if (lastEdge != nullptr && lastEdge->getNode()->getValue() == (*it)->getParent()->getValue()) {
+                it = edges.erase(it);
+                lastEdge = (*it);
+            } else {
+                lastEdge = (*it);
+                ++it;
+            }
+        }
+    }
+
     return edges;
 }
 
@@ -831,7 +907,7 @@ void Graph::removeAllEdges() {
 }
 
 Graph* Graph::copy() {
-    Graph* g_copy = new Graph();
+    Graph* g_copy = new Graph(this->isDigraph());
     Node* i = this->getRoot();
     while (i != nullptr) {
         Node* newNode1 = g_copy->insertNode(i->getValue(), 0);
@@ -865,9 +941,11 @@ bool Graph::hasCycle() {
 
         Edge* edge = top->getEdges();
         while (edge != nullptr) {
-            if (edge->getNode()->wasVisited()) {
+            if (edge->getNode()->wasVisited() && edge->getDirection() == true) {
                 return true;
-            } else {
+            }
+
+            if (edge->getDirection() == true) {
                 nodesInProgress.push(edge->getNode());
             }
 

@@ -20,8 +20,9 @@ class Edge
         Node* node; /* nó referenciado */
         Node* parent; /* endereço para o nó que possui esta aresta (o nó em questão tem aresta com this->node) */
         Edge* next; /* próximo elemento da lista de arestas */
+        bool direction; /* flag que identifica se uma aresta está saindo (true) de um vértice ou não */
     public:
-		Edge(Node* n, int weight);
+		Edge(Node* n, int weight, bool direction);
         int getWeight() const;
 		void setNext(Edge* e);
 		Edge* getNext();
@@ -29,6 +30,8 @@ class Edge
 		Node* getParent();
 		void setNode(Node* n);
 		Node* getNode();
+		void setDirection(bool d);
+		bool getDirection();
         bool operator <(const Edge& e2) const; /* sobreescreve o operador de maior para ordenação */
 };
 
@@ -79,13 +82,14 @@ class Node
          * referencia a primeira aresta do nó, ou seja, determina n quando atributo edges = nullptr
          * @param n nó que será a primeira aresta da lista
          */
-		void setEdgeRoot(Node* n, int weight);
+		void setEdgeRoot(Node* n, int weight, bool direction);
 
         /**
          * anexa ao final da lista encadeada de arestas do nó self o nó @param n
          * @param n próximo nó da lista de arestas
+         * @return bool indica se aresta foi inserida ou não
          */
-		void insertEdge(Node* n, int weight);
+		bool insertEdge(Node* n, int weight, bool direction);
 		Edge* removeEdge(Node* n); /* retorna a aresta removida */
 
         /**
@@ -126,9 +130,10 @@ class Graph
         Component* components; /* ponteiro para a primeira componente conexa da lista */
         int num_nodes; /* quantidade de nós */
         int num_edges; /* quantidade de arestas */
+        bool digraph; /* se true, trata-se de um digrafo */
 
     public:
-		Graph();
+		Graph(bool isDigraph);
 		void insertComponent(Graph* g); /* anexa o grafo @param g ao final da lista de componentes */
 		Component* getComponents(); /* retorna a primeira componente da lista */
 		Component* getBiggestComp(); /* retorna a componente de maior número de vértices */
@@ -138,6 +143,8 @@ class Graph
 		int getNumNodes();
 		void setNumEdges(int num);
 		int getNumEdges();
+		void setDigraph(bool flag);
+		bool isDigraph();
 		Node* getHighestDegreeNode(); /* retorna o nó com maior grau do grafo */
 		Node* getLowestDegreeNode(); /* retorna o nó com menor grau do grafo */
 		double getDegreeAverage(); /* retorna a média dos valores dos graus do grafo */
