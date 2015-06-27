@@ -1,4 +1,4 @@
-	graph-utils v0.3
+	graph-utils v0.4
 
 graph-utils é uma ferramenta simples que se propõe a analisar um grafo
 lido a partir de um arquivo texto que possua a seguinte sintaxe:
@@ -31,6 +31,7 @@ utilize o Makefile para compilar!
 	-h imprime ajuda
 	-i <<ARQUIVO PARA LEITURA DO GRAFO>>
 	-o <<ARQUIVO PARA GRAVAR A ANÁLISE>>
+	-g <<ARQUIVO CONTENDO O GRUPO DE CADA NÓ>>
 	-d faz o programa montar um digrafo
 
 exemplo de utilização:

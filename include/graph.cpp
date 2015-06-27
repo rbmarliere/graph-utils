@@ -61,6 +61,7 @@ Node::Node(int value, int degree) {
     visited = false;
     this->value = value;
     this->degree = degree;
+    group = 0;
     nextInGraph = nullptr;
     edges = nullptr;
 }
@@ -91,6 +92,14 @@ int Node::getDegree() {
 
 void Node::setDegree(int degree) {
     this->degree = degree;
+}
+
+int Node::getGroup() {
+    return group;
+}
+
+void Node::setGroup(int value) {
+    this->group = value;
 }
 
 Node* Node::getNextInGraph() {
@@ -304,6 +313,14 @@ void Graph::setNumEdges(int num) {
 
 int Graph::getNumEdges() {
     return num_edges;
+}
+
+void Graph::setNumGroups(int num) {
+    this->num_groups = num;
+}
+
+int Graph::getNumGroups() {
+    return num_groups;
 }
 
 void Graph::setDigraph(bool flag) {
@@ -790,6 +807,43 @@ Graph* Graph::getMST_Kruskal() {
     }
 
     return g_copy;
+}
+
+Graph* Graph::getMST_EGMSTP() {
+    vector<Edge*> edges = this->getSortedEdges();
+
+    vector<int> groupsNode(this->getNumGroups() + 1); // array com a quantidade de grupos + 1, pois os grupos são numerados de 1 a n. portanto, a posição 0 do vetor será inutilizada para facilitar a leitura. para cada elemento do array é associado o value de um node.
+    Graph* g = new Graph(this->digraph); // solução
+    for (vector<Edge*>::iterator it = edges.begin(); it != edges.end(); it++) {
+        Node* n1 = (*it)->getNode();
+        Node* n2 = (*it)->getParent();
+
+        if  (   // insere aresta na solução se nenhum dos grupos está na solução ou se algum dos nós da aresta já foi inserido
+                (groupsNode.at(n1->getGroup()) == 0 && groupsNode.at(n2->getGroup()) == 0)
+                ||  (groupsNode.at(n1->getGroup()) == n1->getValue() && groupsNode.at(n2->getGroup()) == 0)
+                ||  (groupsNode.at(n1->getGroup()) == 0 && groupsNode.at(n2->getGroup()) == n2->getValue())
+            ) {
+
+            Node* n1_g = g->insertNode(n1->getValue(), 0);
+            Node* n2_g = g->insertNode(n2->getValue(), 0);
+
+            n1_g->setGroup(n1->getGroup());
+            n2_g->setGroup(n2->getGroup());
+
+            g->insertEdge(n1_g, n2_g, (*it)->getWeight());
+
+            if (g->hasCycle()) {
+                // se uma aresta gera ciclo ao ser inserida, deve ser removida
+                g->removeEdge(n1_g, n2_g);
+            } else {
+                // preenche o array com os nós inseridos, para que não sejam mais inseridos em g nós com grupos iguais.
+                groupsNode[n1->getGroup()] = n1->getValue();
+                groupsNode[n2->getGroup()] = n2->getValue();
+            }
+        }
+    }
+
+    return g;
 }
 
 // Graph* Graph::getMaxClique() {

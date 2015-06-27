@@ -6,8 +6,9 @@
 using namespace std;
 
 void printHelp() {
-	cout << "usage: graph-utils -i <input file> -o <output file> <-d *>\n";
-	cout << "* -d for digraphs (optional)\n";
+	cout << "usage: graph-utils -i <input file> -o <output file> -d -g <groups file>\n";
+	cout << "	-d for digraphs (optional)\n";
+	cout << "	-g to provide E-GMSTP's group info through <groups file> (optional)\n";
 }
 
 /**
@@ -25,6 +26,7 @@ int main(int argc, char* argv[])
 	char* input = nullptr;
 	char* output = nullptr;
 	bool digraph = false;
+	char* groups = nullptr;
 
 	// parser dos parametros
 	for (int i = 1; i < argc; i++) {
@@ -37,6 +39,8 @@ int main(int argc, char* argv[])
 		} else if (strcmp(argv[i], "-h") == 0) {
 			printHelp();
 			return 0;
+		} else if (strcmp(argv[i], "-g") == 0) {
+			groups = argv[i+1];
 		}
 	}
 
@@ -47,8 +51,11 @@ int main(int argc, char* argv[])
 
 	try {
 		Manager manager; // objeto Manager responsável por processar os dados
-		manager.importGraph(input, digraph);
-		manager.exportGraph(output);
+		manager.importGraph(input, digraph); // carrega o grafo na memória
+		if (groups != nullptr) {
+			manager.importGroups(groups); // escreve em cada nó do grafo seu grupo correspondente a partir do arquivo groups
+		}
+		manager.exportGraph(output); // escreve o resultado do processamento da ferramenta em output
 	} catch (string msg) {
 		cout << "error: " << msg;
 	}

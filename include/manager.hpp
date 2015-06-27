@@ -1,6 +1,6 @@
 #ifndef MANAGER
 #define MANAGER
-#define VERSION 0.3 /* versão do programa */
+#define VERSION 0.4 /* versão do programa */
 #include "graph.hpp"
 
 /**
@@ -75,6 +75,12 @@ class Manager
 		 * @param path caminho para o arquivo de input, especificado pelo usuário via argumento ao programa
 		 */
 		void importGraph(char* path, bool digraph);
+
+		/**
+		 * função usada para gravar em cada nó do grafo seu grupo correspondente
+		 * @param path caminho para o arquivo utilizado para obter a relação nó x grupo
+		 */
+		void importGroups(char* path);
 };
 
 #endif

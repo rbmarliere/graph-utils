@@ -46,6 +46,7 @@ class Node
     private:
         int value; /* valor do nó */
         int degree; /* grau do nó */
+        int group; /* grupo do nó */
         Node* nextInGraph; /* ponteiro para próximo nó do grafo */
         Edge* edges; /* ponteiro para o primeiro elemento da lista de arestas */
         bool visited; /* flag que determina se o nó já foi visitado */
@@ -74,6 +75,8 @@ class Node
 		void setValue(int value);
 		int getDegree();
 		void setDegree(int degree);
+		int getGroup();
+		void setGroup(int value);
 		Node* getNextInGraph();
 		void setNextInGraph(Node* n);
 		Edge* getEdges();
@@ -130,6 +133,7 @@ class Graph
         Component* components; /* ponteiro para a primeira componente conexa da lista */
         int num_nodes; /* quantidade de nós */
         int num_edges; /* quantidade de arestas */
+        int num_groups; /* quantidade de grupos de nós */
         bool digraph; /* se true, trata-se de um digrafo */
 
     public:
@@ -143,6 +147,8 @@ class Graph
 		int getNumNodes();
 		void setNumEdges(int num);
 		int getNumEdges();
+		void setNumGroups(int num);
+		int getNumGroups();
 		void setDigraph(bool flag);
 		bool isDigraph();
 		Node* getHighestDegreeNode(); /* retorna o nó com maior grau do grafo */
@@ -169,6 +175,7 @@ class Graph
 		Node* getNodeByValue(int value); /* retorna o nó cujo valor é @param value */
 		Graph* getMST_Prim(); /* retorna a árvore geradora mínima usando o algoritmo de Prim */
 		Graph* getMST_Kruskal(); /* retorna a árvore geradora mínima usando o algoritmo de Kruskal */
+		Graph* getMST_EGMSTP(); /* retorna a árvore geradora mínima para o problema da AGM generalizado, utilizando uma adaptação no algoritmo de Kruskal */
 		// Graph* getMaxClique(); /* retorna a clique máxima */
         // Graph* checkSubsetsBy(int factor); /* verifica subconjuntos de this removendo combinações de nós factor a factor, retornando um subgrafo completo ou nullptr */
         std::vector<Edge*> getSortedEdges(); /* carrega um vetor ordenado de arestas, de forma crescente através dos pesos */

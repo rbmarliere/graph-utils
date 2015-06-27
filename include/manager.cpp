@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <string.h>
+#include <unordered_set>
 #include "manager.hpp"
 
 using namespace std;
@@ -78,6 +79,7 @@ void Manager::printEachNodeInfo(ofstream &output) {
 
         output << "Nó: " << i->getValue() << "\n";
         output << "Grau: " << i->getDegree() << "\n";
+        output << "Grupo: " << i->getGroup() << "\n";
         output << "É ponto de articulação? " << graph->isCutVertex(i) << "\n";
 
         output << "Fecho Transitivo Indireto:";
@@ -199,6 +201,14 @@ void Manager::exportGraph(char* path) {
     printGraphInfo(output);
     printNodeInfo(output);
     printEachNodeInfo(output);
+
+    printLine(output, '.');
+    output << "Problema da Árvore Geradora Mínima Generalizado (via Kruskal adaptado)";
+    printLine(output, '.');
+    this->graph = graphBackup->getMST_EGMSTP();
+    printGraphInfo(output);
+    printNodeInfo(output);
+    printEachNodeInfo(output);
     printLine(output, '.');
 
     this->graph = graphBackup;
@@ -254,4 +264,38 @@ void Manager::importGraph(char* path, bool digraph) {
     cout << "done\n";
 
     this->graph = graph;
+}
+
+void Manager::importGroups(char* path) {
+    ifstream input (path);
+    if (!input.is_open()) {
+        std::string errMsg("error opening file \"");
+        throw errMsg + path + "\"";
+    }
+
+    cout << "importing groups from ";
+
+    int v1 = 0, v2 = 0, i = 0;
+    int lines = this->countLines(path);
+    cout << path << " (" << lines << " lines): \n";
+    string line;
+    unordered_set<int> readGroups;
+    while (getline(input, line)) {
+        istringstream iss(line);
+
+        iss >> v1 >> v2;
+
+        Node* n = this->graph->getNodeByValue(v1);
+        n->setGroup(v2);
+
+        readGroups.insert(v2);
+
+        i++;
+        loadbar(i, lines, 50);
+    }
+    input.close();
+
+    this->graph->setNumGroups(readGroups.size());
+
+    cout << "\ndone\n";
 }
